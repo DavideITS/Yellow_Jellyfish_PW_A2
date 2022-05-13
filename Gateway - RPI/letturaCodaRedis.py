@@ -15,14 +15,14 @@ def RedisCheckElement():
         r = redis.Redis(host='localhost', port=6379, db=0)
         # Controllo se la lista ha elementi all'interno
         while (r.llen('NomeCoda')==0):
-            print("Nessun elemento è presente in coda")
+            print("There are no items in the Redis Queue.")
             #5 secondi di attesa nel caso non ci fossero elementi in coda
             time.sleep( 10 )
         # RPOP dalla lista
         dato = r.lpop('NomeCoda')
         return dato
     except ValueError:
-        print("Connessione ad Influx scaduta")
+        print("Connection Error with Redis.")
         #5 secondi di attesa
         time.sleep( 10 )
         RedisCheckElement()
@@ -47,4 +47,4 @@ while True:
     #ESTRAZIONE DI TUTTI I DATI ED INVIO A MQTT DA AGGIUNGERE
     #Topic Modbus:  trainProjectWork/idTreno(Numerico)/idPIC(Numerico)/liveData
     
-    print("Data sent correctly")
+    print("Data sent correctly.")
