@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "83af8c2c-9fb6-4144-974c-6063a8f0f03f": {
+      "ProjectGuid": "83af8c2c-9fb6-4144-974c-6063a8f0f03f",
+      "DisplayName": "MqttBroker",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
