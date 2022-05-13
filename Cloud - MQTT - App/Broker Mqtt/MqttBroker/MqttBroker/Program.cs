@@ -38,15 +38,14 @@ namespace MqttBroker
                                                  .WithConnectionValidator(OnNewConnection)
                                                  // handler for new messages
                                                  .WithApplicationMessageInterceptor(OnNewMessage);
-            //.WithEncryptedEndpoint();
 
-            // creates a new mqtt server     
+            //Creazione Broker MQTT    
             mqttServer = new MqttFactory().CreateMqttServer();
 
-            // start the server with options  
-            mqttServer.StartAsync(options.Build()).GetAwaiter().GetResult();
-
             #endregion Opzioni del Server Broker MQTT
+
+            //Start Broker Mqtt con le opzioni
+            mqttServer.StartAsync(options.Build()).GetAwaiter().GetResult();
 
             while (mqttServer.IsStarted == false) { }
 
