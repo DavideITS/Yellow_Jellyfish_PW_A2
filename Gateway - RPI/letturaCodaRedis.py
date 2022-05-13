@@ -44,7 +44,7 @@ while True:
     #Estrazione i dati da Json
     datiEstrattiFromJson = convertedFromRedis['values']
 
-    #ESTRAZIONE DI TUTTI I DATI ED INVIO A MODBUS DA AGGIUNGERE
+    #ESTRAZIONE DI TUTTI I DATI ED INVIO A MQTT DA AGGIUNGERE
     #Topic Modbus:  trainProjectWork/idTreno(Numerico)/idPIC(Numerico)/liveData
     
     print("Data sent correctly")
