@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "v9gL29MSq5nulsdcPI6QNvDGHZODoLFWpmf+2Fn5AgRoq8GKY0YsJEEBEwTiyT1pHGYTJc+GVa7RZzmnf+CSUA==",
+  "success": true,
+  "projectFilePath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\Broker Mqtt\\MqttBroker\\MqttBroker\\MqttBroker.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\mqttnet\\3.1.2\\mqttnet.3.1.2.nupkg.sha512"
+  ],
+  "logs": []
+}
