@@ -1,5 +1,4 @@
 # Protocol Documentation
-==============
 
 Protocol's structure:
 
