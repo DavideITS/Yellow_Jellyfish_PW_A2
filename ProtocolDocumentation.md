@@ -16,10 +16,14 @@ Message From Pic to RPI:
 
         6) x Byte -> Humidity;
 
+        7) x Byte -> Gas Sensor
+
+        8) x Byte -> Other Sensors.
+
 Message From RPI to Pic:
 
         1) x Byte -> Pic Id;
 
-        2) x Byte -> Command recipient (Door Nr° 1, Door Nr° 2, Toilette, Temperature, Humidity) [Optional]
+        2) x Byte -> Command recipient (Door Nr° 1, Door Nr° 2, Toilette, Temperature, Humidity); [Optional]
 
-        3) x Byte -> Command To Exe [Optional]
+        3) x Byte -> Command To Exe. [Optional]
