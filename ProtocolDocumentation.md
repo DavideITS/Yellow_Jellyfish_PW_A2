@@ -1,4 +1,4 @@
-# Protocol Documentation
+# Protocol Documentation (Draft)
 
 Protocol's structure:
 
