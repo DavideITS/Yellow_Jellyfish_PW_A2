@@ -6,6 +6,7 @@ Options:
         Nr° Port: 707
 
 Topic: 
-                trainProjectWork/idTrain/idPic/liveData
-                                              /command
-                                              /error (?)
+
+        trainProjectWork/idTrain/idPic/liveData
+                                      /command
+                                      /error (?)
