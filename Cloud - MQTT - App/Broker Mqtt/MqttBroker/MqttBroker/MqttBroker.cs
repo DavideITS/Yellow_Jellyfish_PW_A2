@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace MqttBroker
 {
-    internal class Program
+    internal class MqttBroker
     {
         #region Dichiarazione Variabili
 
