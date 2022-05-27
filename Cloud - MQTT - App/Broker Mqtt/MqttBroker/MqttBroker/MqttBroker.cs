@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace MqttBroker
 {
-    internal class Program
+    internal class MqttBroker
     {
         #region Dichiarazione Variabili
 
@@ -61,12 +61,19 @@ namespace MqttBroker
         {
             //Salvataggio Username Completo
             string usernameCompl = context.Username;
-            //Split Username tramite " "
-            string[] nameArr = usernameCompl.Split(" ");
-            //Prende la 1° parola dell'username completo
-            string username = nameArr[0];
+            if(usernameCompl != null)
+            {
+                //Split Username tramite " "
+                string[] nameArr = usernameCompl.Split(" ");
+                //Prende la 1° parola dell'username completo
+                string username = nameArr[0];
 
-            Console.WriteLine($"[{DateTime.Now}] User {username} Login");
+                Console.WriteLine($"[{DateTime.Now}] User {username} Login");
+            }
+            else
+            {
+                Console.WriteLine($"[{DateTime.Now}] Anonymous User Login");
+            }
 
             //Return Connessione corretta
             context.ReasonCode = MqttConnectReasonCode.Success;
