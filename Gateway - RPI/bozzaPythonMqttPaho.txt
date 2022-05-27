@@ -1,0 +1,9 @@
+Example code:
+
+Guardo /Test/sendMessageMqtt.py
+
+# ------------> publish(topic, payload=None, qos=0, retain=False)
+
+# link: http://www.steves-internet-guide.com/publishing-messages-mqtt-client/
+
+# pip install paho-mqtt
