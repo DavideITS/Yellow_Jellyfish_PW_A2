@@ -14,16 +14,14 @@
 void init_UART(int);
 
 void main(void) {
-    TRISB = 0x00;
+    //TRISB = 0x00;
+    //PORTB = 0x00;
     init_UART(9600);
     while(1){
-        if(TXIF ){
-            TXREG = 'a';
-            PORTB |= 0x80;
-            __delay_ms(200);
-            PORTB &= !0x80;
-            __delay_ms(200);  
-        }
+        __delay_ms(500);
+        while(TXIF);
+        TXREG = 'a';
+        while(!(TXSTA & 0x02));
 
     }
 
@@ -32,9 +30,14 @@ void main(void) {
 
 void init_UART(int baudRate)
 {
-    TRISC |= 0x80;
-    TRISC &= !0x40;
+    // Interrupt configuration
+    INTCON = 0xC0;
+    PIE1 |= 0x02;
+    
+    TRISC |= 0x80; // set RC7 to input (RX)
+    TRISC &= !0x40; // RC6 to output (TX)
     TXSTA = 0x24;
+    RCSTA |= 0x80;
     SPBRG = (_XTAL_FREQ/(long)(64UL*baudRate))-1;
 }
 
