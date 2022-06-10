@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "e528a277-3fbb-4317-af23-1a29264e4db7": {
+      "ProjectGuid": "e528a277-3fbb-4317-af23-1a29264e4db7",
+      "DisplayName": "TestSendMessageMqtt",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
