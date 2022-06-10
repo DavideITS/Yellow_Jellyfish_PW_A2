@@ -1,1 +1,3 @@
-pic/dist
+pic/
+*.d
+*.i
