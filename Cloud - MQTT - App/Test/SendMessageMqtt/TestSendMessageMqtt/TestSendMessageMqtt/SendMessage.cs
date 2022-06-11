@@ -13,19 +13,10 @@ namespace TestSendMessageMqtt
     {
         #region Dichiarazione Variabili
         //Topic in cui Pubblicare i messaggi Mqtt
-        static string topicToPublish = "trainProjectWork/4/2/liveData";
+        static string topicToPublish = "trainProjectWork/testSendMessage";
         static ManualResetEvent MRE = new ManualResetEvent(false);
         //Tempo ogni quanto viene inviato un messaggio
         static int timeToSendMessage = 1000;
-
-        #region Test
-        //Contatore usato per controllare il corretto invio dei dati (alternando gli invii)
-        static int countOrderMessage = 0;
-        //Variabile usate in base all'id dei 2 messaggi (Messaggio 1 = [0], Messaggio 2 = [1])
-        static int[] codeToSend = { 2, 3 };
-        static int[] startAddToSend = { 100, 100 };
-        static int[] valuesToSend = { 2, 104 };
-        #endregion Test
 
         //Client Mqtt
         static IManagedMqttClient _mqttClient;
@@ -87,7 +78,8 @@ namespace TestSendMessageMqtt
                 if (_mqttClient.IsConnected)
                 {
                     //Crea la stringa Json
-                    string json = JsonConvert.SerializeObject(new { code = codeToSend[countOrderMessage], startAdd = startAddToSend[countOrderMessage], values = valuesToSend[countOrderMessage] });
+                    //string json = JsonConvert.SerializeObject("{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}");
+                    string json = "{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}";
 
                     //Creazione del messaggio Mqtt
                     var message = new MqttApplicationMessageBuilder()
@@ -100,7 +92,7 @@ namespace TestSendMessageMqtt
                     //Publish del messaggio nel Broker Mqtt
                     _mqttClient.PublishAsync(message);
 
-                    Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topicToPublish}\nData: {json}");
+                    Console.WriteLine($"\n[{DateTime.Now}] Message send in Topic: {topicToPublish}");
 
                 }
             }
