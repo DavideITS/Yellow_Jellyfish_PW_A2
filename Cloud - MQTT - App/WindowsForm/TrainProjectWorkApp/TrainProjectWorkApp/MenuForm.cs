@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +15,21 @@ namespace TrainProjectWorkApp
     {
         string userNick = "";
         string userRole = "";
+
+        #region Emoji
+
+        //Emoji usate per ridimensionare la pagina
+        string squareVoidEmoji = "◻";
+        string squareDoubleEmoji = "❐";
+
+        #endregion Emoji
+
+        #region Move Form
+
+        public const int WM_NCLBUTTONDOWN = 0xA1;
+        public const int HT_CAPTION = 0x2;
+
+        #endregion Move Form
 
         public MenuForm(string nick, string role)
         {
@@ -29,8 +45,23 @@ namespace TrainProjectWorkApp
 
             InitializeComponent();
 
+            #region Layout in base al Ruolo
+
             userNick = nick;
             userRole = role;
+
+            nameLabel.Text = userNick;
+            roleLabel.Text = userRole;
+
+            if (userRole.Equals("Admin"))
+            {
+                trainButton.Visible = true;
+            }else
+            {
+                trainButton.Visible = false;
+            }
+
+            #endregion Layout in base al Ruolo
 
             #region WaitForm Close
 
@@ -38,6 +69,58 @@ namespace TrainProjectWorkApp
 
             #endregion WaitForm Close
 
+        }
+
+        //Se si vuole chiudere l'app
+        private void closeButton_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        //Se si vuole massimizzare o ridurre la grandezza dell'app
+        private void resizeButton_Click(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Maximized)
+            {
+                resizeButton.Text = squareVoidEmoji;
+                this.WindowState = FormWindowState.Normal;
+            }
+            else if (this.WindowState == FormWindowState.Normal)
+            {
+                resizeButton.Text = squareDoubleEmoji;
+                this.WindowState = FormWindowState.Maximized;
+            }
+        }
+
+        //Se si vuole minimizzare l'app
+        private void minimizeButton_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        //Metodi per lo spostamento della schermata
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
+
+        //Metodo usato per il muovimento del Form
+        private void headerTitleLabel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+        //Quando si schiaccia il pulsante per vedere le informazioni dei vagoni
+        private void wagonButton_Click(object sender, EventArgs e)
+        {
+            WagonForm wf = new WagonForm(userRole);
+            wf.ShowDialog();
         }
     }
 }

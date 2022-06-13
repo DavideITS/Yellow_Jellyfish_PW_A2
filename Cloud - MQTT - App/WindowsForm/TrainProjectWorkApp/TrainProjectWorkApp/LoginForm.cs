@@ -1,9 +1,4 @@
-﻿using MQTTnet;
-using MQTTnet.Client;
-using MQTTnet.Client.Connecting;
-using MQTTnet.Client.Disconnecting;
-using MQTTnet.Client.Options;
-using MQTTnet.Extensions.ManagedClient;
+﻿using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -25,21 +20,6 @@ namespace TrainProjectWorkApp
 
         List<Dictionary<string, object>> userList = new List<Dictionary<string, object>>();
 
-        #region Mqtt
-
-        //Client Mqtt
-        static IManagedMqttClient _mqttClient;
-        //Topic nel quale ricevere i messaggi
-        static string topicToReceive = "trainProjectWork/testSendMessage";
-        //Tempo in secondi tra ogni tentativo di riconnessione
-        static int timeMqttReconnect = 5;
-        //Nr di porta di Mqtt
-        static int nPortMqtt = 707;
-        //Stringa Ip del broker Mqtt
-        static string serverMqtt = "localhost";
-
-        #endregion Mqtt
-
         #region Emoji
 
         //Emoji usate per ridimensionare la pagina
@@ -49,8 +29,10 @@ namespace TrainProjectWorkApp
         #endregion Emoji
 
         #region Move Form
+
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
+
         #endregion Move Form
 
         #endregion Variabili
@@ -70,67 +52,17 @@ namespace TrainProjectWorkApp
 
             InitializeComponent();
 
-            #region Sub Mqtt
+            Console.Title = "Train Project Work's App";
 
-            //Id randomico del Client
-            string idNameClientMqtt = Guid.NewGuid().ToString("N");
-            Console.Title = "Train Project Work App";
+            #region MongoDb User List
 
-            #region Opzioni Client MQTT
-            // Creates a new client
-            MqttClientOptionsBuilder builder = new MqttClientOptionsBuilder()
-                                                    .WithClientId("App-" + idNameClientMqtt.ToString())
-                                                    .WithTcpServer(serverMqtt, nPortMqtt)
-                                                    .WithCredentials("App-" + idNameClientMqtt.ToString(), "ConsolePassword000");
+            userList = MongoDB.Client
+                    .GetDatabase("trainProjectWork")
+                    .GetCollection<Dictionary<string, object>>("Users")
+                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                   .ToList();
 
-            // Create client options objects
-            ManagedMqttClientOptions options = new ManagedMqttClientOptionsBuilder()
-                                    .WithAutoReconnectDelay(TimeSpan.FromSeconds(timeMqttReconnect))
-                                    .WithClientOptions(builder.Build())
-                                    .Build();
-
-            // Creates the client object
-            //IManagedMqttClient _mqttClient = new MqttFactory().CreateManagedMqttClient();
-            _mqttClient = new MqttFactory().CreateManagedMqttClient();
-
-            // Set up handlers
-            _mqttClient.ConnectedHandler = new MqttClientConnectedHandlerDelegate(OnConnected);
-            _mqttClient.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(OnDisconnected);
-            _mqttClient.ConnectingFailedHandler = new ConnectingFailedHandlerDelegate(OnConnectingFailed);
-
-            // Starts a connection with the Broker
-            _mqttClient.StartAsync(options).GetAwaiter().GetResult();
-            #endregion Opzioni Client MQTT
-
-            while (_mqttClient.IsConnected == false) { }
-            //Console.WriteLine(_mqttClient.IsConnected);
-
-            #region Quando vengono ricevuti messaggi da MQTT
-            _mqttClient.UseApplicationMessageReceivedHandler(e =>
-            {
-                //Estrazione Messaggio ricevuto
-                var jsonString = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-
-                //Estrazione topic
-                string topic = e.ApplicationMessage.Topic;
-                //Split del topic tramite "/"
-                string[] topicSplit = topic.Split("/");
-                //Conversione da Json String a Json
-                var allJsonContent = JObject.Parse(jsonString);
-
-                //Estrazione dei dati
-                userList = allJsonContent["values"].Select(s => new Dictionary<string, object> {
-                            { "nick", s["nick"].ToString() },
-                            { "role", s["role"].ToString()},
-                            { "password", s["password"].ToString()}
-                                })
-                                .ToList();
-
-                Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topic}");
-            });
-            #endregion Quando vengono ricevuti messaggi da MQTT
-
-            #endregion Sub Mqtt
+            #endregion MongoDb User List
 
             #region WaitForm Close
 
@@ -193,8 +125,34 @@ namespace TrainProjectWorkApp
         //Bottone di Login
         private void loginButton_Click(object sender, EventArgs e)
         {
+            login();
+        }
+
+        //Quando viene premuto un tasto nel userTextBox
+        private void userTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Se il tasto premuto è l'invio
+            if (e.KeyCode == Keys.Enter)
+            {
+                login();
+            }
+        }
+
+        //Quando viene premuto un tasto nel passwordTextBox
+        private void passwordTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            //Se il tasto premuto è l'invio
+            if (e.KeyCode == Keys.Enter)
+            {
+                login();
+            }
+        }
+
+        //Quando si vuole effettuare il Login
+        private void login()
+        {
             //Controllo che ci siano scritte all'interno dei campi utenti e password
-            if((!passwordTextBox.Text.Replace(" ", "").Equals("")) && (!userTextBox.Text.Replace(" ", "").Equals("")))
+            if ((!passwordTextBox.Text.Replace(" ", "").Equals("")) && (!userTextBox.Text.Replace(" ", "").Equals("")))
             {
                 var searchUser = userList.Where(s => s["nick"].ToString().Equals(userTextBox.Text) && s["password"].ToString().Equals(passwordTextBox.Text));
                 //Controllo se viene trovata una corrispondenza per utente/password
@@ -219,31 +177,6 @@ namespace TrainProjectWorkApp
 
         #endregion Login
 
-        #region Metodi Mqtt
-
-        //Metodo eseguito quando avviene una connessione con mqtt
-        public static void OnConnected(MqttClientConnectedEventArgs obj)
-        {
-            _mqttClient.SubscribeAsync(topicToReceive);
-
-            Console.WriteLine("Successfully connected.");
-        }
-
-        //Metodo eseguito quando avviene un errore di connessione con mqtt
-        public static void OnConnectingFailed(ManagedProcessFailedEventArgs obj)
-        {
-            Console.WriteLine("Couldn't connect to broker.");
-        }
-
-        //Metodo eseguito quando avviene una disconnessione da mqtt
-        public static void OnDisconnected(MqttClientDisconnectedEventArgs obj)
-        {
-            Console.WriteLine("Successfully disconnected.");
-        }
-
-
-        #endregion Metodi Mqtt
-
         #endregion Metodi
 
         #region Move Form
@@ -263,8 +196,9 @@ namespace TrainProjectWorkApp
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
+
         #endregion Move Form
 
-
+        
     }
 }

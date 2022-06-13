@@ -198,6 +198,7 @@
             this.passwordTextBox.TabIndex = 7;
             this.passwordTextBox.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
             this.passwordTextBox.UseSystemPasswordChar = true;
+            this.passwordTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passwordTextBox_KeyDown);
             // 
             // userPanel
             // 
@@ -235,6 +236,7 @@
             this.userTextBox.TabIndex = 6;
             this.userTextBox.TextAlignment = System.Windows.Forms.HorizontalAlignment.Left;
             this.userTextBox.UseSystemPasswordChar = false;
+            this.userTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.userTextBox_KeyDown);
             // 
             // userLabel
             // 
@@ -369,7 +371,7 @@
             this.headerTitleLabel.TabIndex = 1;
             this.headerTitleLabel.Text = "Project Work Train\'s App";
             this.headerTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.headerTitleLabel.Click += new System.EventHandler(this.resizeButton_Click);
+            this.headerTitleLabel.DoubleClick += new System.EventHandler(this.resizeButton_Click);
             this.headerTitleLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.headerTitleLabel_MouseMove);
             // 
             // LoginForm

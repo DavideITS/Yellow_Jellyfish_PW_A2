@@ -8,6 +8,9 @@
     <Compile Update="MenuForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="WagonForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="WaitForm.cs">
       <SubType>Form</SubType>
     </Compile>
