@@ -10,18 +10,24 @@
 
 #include <xc.h>
 #define _XTAL_FREQ 16000000
+#define TMR_PRE 6
 
 char picId = 0x01;
 int placeHolder = 768;
+int millis = 0;
+char seconds = 0;
+
 void init_UART(int);
 void send_Byte(char);
 void send_Array(char *);
+void init_Timer();
 
 void main(void) {
     TRISB = 0x00;
     TRISD = 0x00;
     TRISE = 0x00;
     PORTE = 0xFF;
+    init_Timer();
     init_UART(9600);
     while(1){
         char str[] = "prova";
@@ -33,7 +39,7 @@ void main(void) {
 
 void send_Byte(char byte)
 {
-        if(TXIF);
+    if(TXIF)
         TXREG = byte;
 }
 
@@ -52,10 +58,18 @@ void send_Array(char * array)
     }
 }
 
+void init_Timer()
+{
+    INTCON |= 0xA0;
+    OPTION_REG &= ~0x3C;
+    OPTION_REG |= 0x03;
+    TMR0 = TMR_PRE;
+}
+
 void init_UART(int baudRate)
 {
     // Interrupt configuration
-    INTCON = 0xC0;
+    INTCON |= 0xC0;
     PIE1 |= 0x22;
     TRISC |= 0x80; // set RC7 to input (RX)
     TRISC &= !0x40; // RC6 to output (TX)
@@ -68,8 +82,20 @@ void init_UART(int baudRate)
 
 void __interrupt() ISR()
 {
-    if (RCIF){
+    if (RCIF){ // Interrupt RX
         RCIF = 0;
-        PORTD = RCREG;
+        PORTD = seconds;
     }
+    
+    if (INTCON & 0x04) // Interrupt timer
+    {
+        if(++millis >= 1000)
+        {
+            millis = 0;
+            seconds++;
+        }
+    INTCON &= ~0x04;
+    }
+    PORTD = seconds;
+
 }
