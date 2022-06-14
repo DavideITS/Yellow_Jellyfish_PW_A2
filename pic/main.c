@@ -20,7 +20,7 @@ char seconds = 0;
 void init_UART(int);
 void send_Byte(char);
 void send_Array(char *);
-void init_Timer();
+int init_Timer();
 
 void main(void) {
     TRISB = 0x00;
@@ -84,7 +84,7 @@ void __interrupt() ISR()
 {
     if (RCIF){ // Interrupt RX
         RCIF = 0;
-        PORTD = seconds;
+        PORTD = RCREG;
     }
     
     if (INTCON & 0x04) // Interrupt timer
@@ -96,6 +96,5 @@ void __interrupt() ISR()
         }
     INTCON &= ~0x04;
     }
-    PORTD = seconds;
 
 }
