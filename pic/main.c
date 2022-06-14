@@ -19,6 +19,9 @@ void send_Array(char *);
 
 void main(void) {
     TRISB = 0x00;
+    TRISD = 0x00;
+    TRISE = 0x00;
+    PORTE = 0xFF;
     init_UART(9600);
     while(1){
         char str[] = "prova";
@@ -48,21 +51,25 @@ void send_Array(char * array)
             pos++;
     }
 }
+
 void init_UART(int baudRate)
 {
     // Interrupt configuration
     INTCON = 0xC0;
-    PIE1 |= 0x02;
+    PIE1 |= 0x22;
     TRISC |= 0x80; // set RC7 to input (RX)
     TRISC &= !0x40; // RC6 to output (TX)
 
     TXSTA = 0x24;
-    RCSTA |= 0x80;
+    RCSTA |= 0x90;
 
     SPBRG = (_XTAL_FREQ/(long)(64UL*baudRate))-1;
 }
 
 void __interrupt() ISR()
 {
-    
+    if (RCIF){
+        RCIF = 0;
+        PORTD = RCREG;
+    }
 }
