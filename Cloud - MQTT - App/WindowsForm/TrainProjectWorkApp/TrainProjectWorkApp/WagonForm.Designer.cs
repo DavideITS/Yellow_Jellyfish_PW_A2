@@ -539,6 +539,7 @@
             this.Padding = new System.Windows.Forms.Padding(2);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "WagonForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WagonForm_FormClosing);
             this.formPanel.ResumeLayout(false);
             this.footerPanel.ResumeLayout(false);
             this.footerPanel.PerformLayout();

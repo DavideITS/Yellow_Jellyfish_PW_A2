@@ -1,0 +1,22 @@
+[{
+  "_id": {
+    "$oid": "62a9cac167169a7168991c76"
+  },
+  "nrTrain": 1,
+  "nrWagon": 5,
+  "conductor": "Utente2"
+},{
+  "_id": {
+    "$oid": "62a9cd6867169a7168991c7f"
+  },
+  "nrTrain": 2,
+  "nrWagon": 4,
+  "conductor": "Utente3"
+},{
+  "_id": {
+    "$oid": "62a9cd9467169a7168991c80"
+  },
+  "nrTrain": 2,
+  "nrWagon": 7,
+  "conductor": "Utente4"
+}]

@@ -164,7 +164,9 @@ namespace TrainProjectWorkApp
                     var userRole = searchUser.Select(s => new string(s["role"].ToString().ToCharArray())).First();
                     //Visione MenuForm
                     MenuForm mf = new MenuForm(userNick, userRole);
+                    this.Visible = false;
                     mf.ShowDialog();
+                    this.Visible = true;
                 }
                 else
                 {

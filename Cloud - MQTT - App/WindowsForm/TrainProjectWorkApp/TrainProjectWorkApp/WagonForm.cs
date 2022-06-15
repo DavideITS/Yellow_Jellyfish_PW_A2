@@ -1,4 +1,5 @@
-﻿using MQTTnet;
+﻿using MongoDB.Driver;
+using MQTTnet;
 using MQTTnet.Client.Connecting;
 using MQTTnet.Client.Disconnecting;
 using MQTTnet.Client.Options;
@@ -21,13 +22,19 @@ namespace TrainProjectWorkApp
     public partial class WagonForm : Form
     {
         string userRole = "";
+        string userNick = "";
+
+        List<Dictionary<string, object>> trainList = new List<Dictionary<string, object>>();
+
+        static int nrTrain = 0;
+        int nrWagon = 0;
 
         #region Mqtt
 
         //Client Mqtt
         static IManagedMqttClient _mqttClient;
         //Topic nel quale ricevere i messaggi
-        static string topicToReceive = "trainProjectWork/liveData/#";
+        static string topicToReceive = "trainProjectWork/#/liveData/#";
         //Tempo in secondi tra ogni tentativo di riconnessione
         static int timeMqttReconnect = 5;
         //Nr di porta di Mqtt
@@ -52,7 +59,7 @@ namespace TrainProjectWorkApp
 
         #endregion Emoji
 
-        public WagonForm(string role)
+        public WagonForm(string role, string nick)
         {
             #region WaitForm Open
 
@@ -66,15 +73,49 @@ namespace TrainProjectWorkApp
             InitializeComponent();
 
             userRole = role;
+            userNick = nick;
 
-            if (userRole.Equals("Admin") || userRole.Equals("Capo"))
+            
+
+            #region MongoDb User List
+
+            trainList = MongoDB.Client
+                    .GetDatabase("trainProjectWork")
+                    .GetCollection<Dictionary<string, object>>("Trains")
+                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                   .ToList();
+
+            #endregion MongoDb User List
+
+            if (!userRole.ToLower().Equals("Null"))
             {
-                //
+                var trainListFilterWhere = trainList.Where(s => s["conductor"].ToString().Equals(userNick));
+
+                if(trainListFilterWhere.Count() == 0)
+                {
+                    trainNumericUpDown.Enabled = false;
+                    wagonNumericUpDown.Enabled = false;
+                }else if (trainListFilterWhere.Count() > 0)
+                {
+                    nrTrain = trainListFilterWhere.Select(s => int.Parse(s["nrTrain"].ToString())).First();
+                    nrWagon = trainListFilterWhere.Select(s => int.Parse(s["nrWagon"].ToString())).First();
+
+                    trainNumericUpDown.Value = nrTrain;
+                    trainNumericUpDown.Maximum = nrTrain;
+                    trainNumericUpDown.Minimum = nrTrain;
+
+                    wagonNumericUpDown.Value = 1;
+                    wagonNumericUpDown.Maximum = nrWagon;
+                    wagonNumericUpDown.Minimum = 1;
+                }
+                
             }
             else
             {
                 //
             }
+
+            
 
             #region Mqtt
 
@@ -125,8 +166,11 @@ namespace TrainProjectWorkApp
                 Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topic}\nData: {data}");
 
                 //Controllo se il dato è quello interessato
+                /*
                 if (int.Parse(json["nrTrain"].ToString()) == trainNumericUpDown.Value
                 && int.Parse(json["nrWagon"].ToString()) == wagonNumericUpDown.Value)
+                */
+                if (int.Parse(json["nrWagon"].ToString()) == wagonNumericUpDown.Value)
                 {
 
                     if (InvokeRequired)
@@ -224,6 +268,10 @@ namespace TrainProjectWorkApp
 
         public static void OnConnected(MqttClientConnectedEventArgs obj)
         {
+            if(nrTrain != 0)
+            {
+                topicToReceive = $"trainProjectWork/{nrTrain}/liveData/#";
+            }
             _mqttClient.SubscribeAsync(topicToReceive);
 
             Console.WriteLine("Successfully connected.");
@@ -294,6 +342,12 @@ namespace TrainProjectWorkApp
                 ReleaseCapture();
                 SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
+        }
+
+        //Quando si vuole chiudere il form
+        private void WagonForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _mqttClient.StopAsync();
         }
     }
 }

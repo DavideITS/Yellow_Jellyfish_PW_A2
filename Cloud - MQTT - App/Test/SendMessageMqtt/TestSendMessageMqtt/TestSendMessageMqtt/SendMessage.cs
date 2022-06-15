@@ -13,7 +13,7 @@ namespace TestSendMessageMqtt
     {
         #region Dichiarazione Variabili
         //Topic in cui Pubblicare i messaggi Mqtt
-        static string topicToPublish = "trainProjectWork/liveData";
+        static string topicToPublish = "trainProjectWork/1/liveData";
         static ManualResetEvent MRE = new ManualResetEvent(false);
         //Tempo ogni quanto viene inviato un messaggio
         static int timeToSendMessage = 1000;
@@ -80,7 +80,8 @@ namespace TestSendMessageMqtt
                     //Crea la stringa Json
                     //string json = JsonConvert.SerializeObject("{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}");
                     //string json = "{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}";
-                    string json = "{\"nrTrain\":1,\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":true,\"Port\":[true,true,true,false]}";
+                    //string json = "{\"nrTrain\":1,\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":true,\"Port\":[true,true,true,false]}";
+                    string json = "{\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":true,\"Port\":[true,true,true,false]}";
 
 
                     //Creazione del messaggio Mqtt

@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "62a739d335054dbcf749883b"
+  },
+  "nick": "Admin",
+  "role": "Admin",
+  "password": "test123"
+},{
+  "_id": {
+    "$oid": "62a739ff35054dbcf749883c"
+  },
+  "nick": "Utente1",
+  "role": "Stationmaster",
+  "password": "test123"
+},{
+  "_id": {
+    "$oid": "62a73a0d35054dbcf749883d"
+  },
+  "nick": "Utente2",
+  "role": "Null",
+  "password": "test123"
+},{
+  "_id": {
+    "$oid": "62a9cdb267169a7168991c83"
+  },
+  "nick": "Utente3",
+  "role": "Null",
+  "password": "test123"
+},{
+  "_id": {
+    "$oid": "62a9cdba67169a7168991c84"
+  },
+  "nick": "Utente4",
+  "role": "Null",
+  "password": "test123"
+}]

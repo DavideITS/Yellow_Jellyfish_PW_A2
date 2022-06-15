@@ -119,8 +119,10 @@ namespace TrainProjectWorkApp
         //Quando si schiaccia il pulsante per vedere le informazioni dei vagoni
         private void wagonButton_Click(object sender, EventArgs e)
         {
-            WagonForm wf = new WagonForm(userRole);
+            WagonForm wf = new WagonForm(userRole, userNick);
+            this.Visible = false;
             wf.ShowDialog();
+            this.Visible = true;
         }
     }
 }
