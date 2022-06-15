@@ -11,6 +11,10 @@
 #include <xc.h>
 #define _XTAL_FREQ 16000000
 #define TMR_PRE 6
+#define UPD_DELAY 3
+#define TRUE 1
+#define FALSE 0
+#define BAUDRATE 9600
 
 char picId = 0x01;
 int placeHolder = 768;
@@ -18,12 +22,19 @@ int millis = 0;
 int seconds = 0;
 char dataArray[64];
 
+char boolReg = 0;
+/*
+ * 1 = device is sending data
+ * 2 = send trigger state
+ */
 
 void send_byte(char);
-char send_array(char *);
-void send_update();
+void send_array(char *);
+void com_handler();
 void init_UART(int);
 void init_Timer();
+
+void edit_reg(char *, char, char);
 
 void main(void) {
     TRISB = 0x00;
@@ -31,11 +42,9 @@ void main(void) {
     TRISE = 0x00;
     PORTE = 0xFF;
     init_Timer();
-    init_UART(9600);
+    init_UART(BAUDRATE);
     while(1){
-        char str[] = "prova";
-        if(!(seconds % 1))
-            while(send_array(str));
+        com_handler();
     }
 
 }
@@ -46,10 +55,10 @@ void send_byte(char byte)
         TXREG = byte;
 }
 
-char send_array(char * array) // returns 0 if all data is sent
+void send_array(char * array) // returns 0 if all data is sent
 {
     static char pos = 0;
-
+    boolReg |= 0x01;
     if(TXIF)
     {
         send_byte(array[pos]);
@@ -57,12 +66,51 @@ char send_array(char * array) // returns 0 if all data is sent
         if(array[pos] == '\0')
         {
             pos = 0;
-            return 0x00;
+            boolReg &= !0x01;
         }
         else
             pos++;
     }
-    return 0xFF;
+}
+
+void com_handler()
+{   
+
+    if((!(seconds % UPD_DELAY) && boolReg & 0x02) || boolReg & 0x01)
+    {
+        boolReg &= ~0x02;
+        char str[] = "prova";
+        send_array(str);
+    }
+    
+    if(!(seconds % UPD_DELAY))
+        boolReg &= ~0x02;
+    else
+        boolReg |= 0x02;
+
+    /*
+    edit_reg(&boolReg, 1, !(boolReg & 0x04) && !(seconds % UPD_DELAY));
+
+    if(!(seconds % UPD_DELAY) && ((boolReg & 0x02) && !(boolReg & 0x04)))
+        boolReg |= 0x02;
+    else
+ 
+    if(boolReg & 0x01)
+    {
+        char str[] = "prova";
+        send_array(str);
+    }
+
+    edit_reg(&boolReg, 3, boolReg & 0x02); */
+}
+
+void edit_reg(char * reg, char pos, char val)
+{
+    pos = 1 << pos;
+    if(val)
+        *reg |= pos;
+    else
+        *reg &= ~pos;
 }
 
 void init_Timer()
