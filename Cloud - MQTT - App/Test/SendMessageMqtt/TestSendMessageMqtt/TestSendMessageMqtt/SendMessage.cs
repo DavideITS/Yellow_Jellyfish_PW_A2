@@ -72,6 +72,7 @@ namespace TestSendMessageMqtt
 
             #region Per mandare messaggi di "aggiornamento" ( -> Messaggi di Lettura su MQTT da eseguire su Modbus )
             // Send a new message to the broker every x second
+            int countSendMessage = 0;
             while (!MRE.WaitOne(timeToSendMessage))
             {
                 //Se il Client è connesso al Server Mqtt
@@ -81,8 +82,33 @@ namespace TestSendMessageMqtt
                     //string json = JsonConvert.SerializeObject("{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}");
                     //string json = "{\"values\":[{\"nick\":\"Admin\",\"role\":\"Admin\",\"password\":\"test123\"},{\"nick\":\"Utente1\",\"role\":\"Capo\",\"password\":\"test123\"},{\"nick\":\"Utente2\",\"role\":\"Null\",\"password\":\"test123\"}]}";
                     //string json = "{\"nrTrain\":1,\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":true,\"Port\":[true,true,true,false]}";
-                    string json = "{\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":true,\"Port\":[true,true,true,false]}";
 
+                    string json = "";
+                    if(countSendMessage == 0)
+                    {
+                        json = "{\"nrWagon\":1,\"Temp\":22.6,\"Hum\":59.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,false,false]}";
+                        countSendMessage++;
+                    }
+                    else if (countSendMessage == 1)
+                    {
+                        json = "{\"nrWagon\":2,\"Temp\":23.1,\"Hum\":55.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,true,false]}";
+                        countSendMessage++;
+                    }
+                    else if (countSendMessage == 2)
+                    {
+                        json = "{\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[false,true,true,false]}";
+                        countSendMessage++;
+                    }
+                    else if (countSendMessage == 3)
+                    {
+                        json = "{\"nrWagon\":4,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
+                        countSendMessage++;
+                    }
+                    else if (countSendMessage == 4)
+                    {
+                        json = "{\"nrWagon\":5,\"Temp\":23.3,\"Hum\":60.0,\"Smoke\":true,\"Toilette\":false,\"Port\":[false,true,true,false]}";
+                        countSendMessage = 0;
+                    }
 
                     //Creazione del messaggio Mqtt
                     var message = new MqttApplicationMessageBuilder()

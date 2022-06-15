@@ -53,12 +53,14 @@ namespace TrainProjectWorkApp
             nameLabel.Text = userNick;
             roleLabel.Text = userRole;
 
-            if (userRole.Equals("Admin"))
-            {
-                trainButton.Visible = true;
-            }else
+            if (userRole.Equals("Null"))
             {
                 trainButton.Visible = false;
+                wagonButton.Visible = true;
+            }else
+            {
+                trainButton.Visible = true;
+                wagonButton.Visible = false;
             }
 
             #endregion Layout in base al Ruolo
@@ -119,10 +121,25 @@ namespace TrainProjectWorkApp
         //Quando si schiaccia il pulsante per vedere le informazioni dei vagoni
         private void wagonButton_Click(object sender, EventArgs e)
         {
+            /*
             WagonForm wf = new WagonForm(userRole, userNick);
             this.Visible = false;
             wf.ShowDialog();
             this.Visible = true;
+            */
+
+            if (userRole.Equals("Null"))
+            {
+                SeeWagonForm swf = new SeeWagonForm(1);
+                this.Visible = false;
+                swf.ShowDialog();
+                this.Visible = true;
+            }
+            else
+            {
+                //(SeeTrainForm)
+                //Mostro prima Form treni, poi dai Form Treni passa al SeeWagonForm
+            }
         }
     }
 }

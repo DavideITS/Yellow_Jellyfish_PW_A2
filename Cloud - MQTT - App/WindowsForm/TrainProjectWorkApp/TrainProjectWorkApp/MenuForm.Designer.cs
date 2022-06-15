@@ -123,7 +123,7 @@
             this.trainButton.FlatAppearance.BorderSize = 0;
             this.trainButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.trainButton.ForeColor = System.Drawing.Color.DarkGray;
-            this.trainButton.Location = new System.Drawing.Point(231, 228);
+            this.trainButton.Location = new System.Drawing.Point(231, 165);
             this.trainButton.Name = "trainButton";
             this.trainButton.Size = new System.Drawing.Size(130, 100);
             this.trainButton.TabIndex = 0;
@@ -136,7 +136,7 @@
             this.wagonButton.FlatAppearance.BorderSize = 0;
             this.wagonButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.wagonButton.ForeColor = System.Drawing.Color.DarkGray;
-            this.wagonButton.Location = new System.Drawing.Point(231, 68);
+            this.wagonButton.Location = new System.Drawing.Point(231, 165);
             this.wagonButton.Name = "wagonButton";
             this.wagonButton.Size = new System.Drawing.Size(130, 100);
             this.wagonButton.TabIndex = 1;
