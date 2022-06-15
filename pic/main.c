@@ -15,12 +15,15 @@
 char picId = 0x01;
 int placeHolder = 768;
 int millis = 0;
-char seconds = 0;
+int seconds = 0;
+char dataArray[64];
 
+
+void send_byte(char);
+char send_array(char *);
+void send_update();
 void init_UART(int);
-void send_Byte(char);
-void send_Array(char *);
-int init_Timer();
+void init_Timer();
 
 void main(void) {
     TRISB = 0x00;
@@ -31,31 +34,35 @@ void main(void) {
     init_UART(9600);
     while(1){
         char str[] = "prova";
-        __delay_ms(500);
-        send_Array(str);
+        if(!(seconds % 1))
+            while(send_array(str));
     }
 
 }
 
-void send_Byte(char byte)
+void send_byte(char byte)
 {
     if(TXIF)
         TXREG = byte;
 }
 
-void send_Array(char * array)
+char send_array(char * array) // returns 0 if all data is sent
 {
     static char pos = 0;
 
     if(TXIF)
     {
-        send_Byte(array[pos]);
+        send_byte(array[pos]);
         PORTB = array[pos];
         if(array[pos] == '\0')
+        {
             pos = 0;
+            return 0x00;
+        }
         else
             pos++;
     }
+    return 0xFF;
 }
 
 void init_Timer()
