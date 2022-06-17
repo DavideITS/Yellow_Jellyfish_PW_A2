@@ -21,20 +21,21 @@ int placeHolder = 768;
 int millis = 0;
 int seconds = 0;
 char dataArray[64];
+char counter = 0x02;
 
 char boolReg = 0;
 /*
  * 1 = device is sending data
  * 2 = send trigger state
+ * 8 = millis interrupt
  */
 
 void send_byte(char);
 void send_array(char *);
+void timer_handler();
 void com_handler();
 void init_UART(int);
 void init_Timer();
-
-void edit_reg(char *, char, char);
 
 void main(void) {
     TRISB = 0x00;
@@ -44,6 +45,7 @@ void main(void) {
     init_Timer();
     init_UART(BAUDRATE);
     while(1){
+        timer_handler();
         com_handler();
     }
 
@@ -55,62 +57,57 @@ void send_byte(char byte)
         TXREG = byte;
 }
 
-void send_array(char * array) // returns 0 if all data is sent
+void send_array(char * array)
 {
     static char pos = 0;
     boolReg |= 0x01;
     if(TXIF)
     {
         send_byte(array[pos]);
-        PORTB = array[pos];
+        // PORTB = array[pos];
         if(array[pos] == '\0')
         {
             pos = 0;
             boolReg &= !0x01;
         }
         else
+
             pos++;
+    }
+}
+
+void timer_handler()
+{
+    if(boolReg & 0x80)
+    {
+        if(++millis >= 1000)
+        {
+            millis = 0;
+            seconds++;
+        }
+        
+        boolReg &= ~0x80;
     }
 }
 
 void com_handler()
 {   
-
-    if((!(seconds % UPD_DELAY) && boolReg & 0x02) || boolReg & 0x01)
+    if((!(seconds % UPD_DELAY) && (boolReg & 0x02)) || boolReg & 0x01)
     {
-        boolReg &= ~0x02;
         char str[] = "prova";
         send_array(str);
     }
     
+    PORTB = counter;
+    PORTD = seconds % UPD_DELAY;
+    if(!(seconds % UPD_DELAY) && (boolReg & 0x02))
+        counter++;
+
     if(!(seconds % UPD_DELAY))
         boolReg &= ~0x02;
     else
         boolReg |= 0x02;
 
-    /*
-    edit_reg(&boolReg, 1, !(boolReg & 0x04) && !(seconds % UPD_DELAY));
-
-    if(!(seconds % UPD_DELAY) && ((boolReg & 0x02) && !(boolReg & 0x04)))
-        boolReg |= 0x02;
-    else
- 
-    if(boolReg & 0x01)
-    {
-        char str[] = "prova";
-        send_array(str);
-    }
-
-    edit_reg(&boolReg, 3, boolReg & 0x02); */
-}
-
-void edit_reg(char * reg, char pos, char val)
-{
-    pos = 1 << pos;
-    if(val)
-        *reg |= pos;
-    else
-        *reg &= ~pos;
 }
 
 void init_Timer()
@@ -144,12 +141,8 @@ void __interrupt() ISR()
     
     if (INTCON & 0x04) // Interrupt timer
     {
-        if(++millis >= 1000)
-        {
-            millis = 0;
-            seconds++;
-        }
-    INTCON &= ~0x04;
+        boolReg |= 0x80;
+        INTCON &= ~0x04;
     }
 
 }
