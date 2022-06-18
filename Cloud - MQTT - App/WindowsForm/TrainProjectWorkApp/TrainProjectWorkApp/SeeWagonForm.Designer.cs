@@ -33,7 +33,7 @@
             this.fillPanel = new System.Windows.Forms.Panel();
             this.dataUpadatePanel = new System.Windows.Forms.Panel();
             this.dateLabel = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
+            this.LastDataReceivedLabel = new System.Windows.Forms.Label();
             this.wagonDataGridViewPanel = new System.Windows.Forms.Panel();
             this.wagonDataGridView = new System.Windows.Forms.DataGridView();
             this.nrWagonColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -45,12 +45,12 @@
             this.Port2Column = new System.Windows.Forms.DataGridViewImageColumn();
             this.Port3Column = new System.Windows.Forms.DataGridViewImageColumn();
             this.Port4Column = new System.Windows.Forms.DataGridViewImageColumn();
-            this.voidColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.wagonLabel = new System.Windows.Forms.Label();
             this.titleLabel = new System.Windows.Forms.Label();
             this.footerPanel = new System.Windows.Forms.Panel();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.label16 = new System.Windows.Forms.Label();
+            this.checkConnectionPictureBox = new System.Windows.Forms.PictureBox();
+            this.checkConnectionLabel = new System.Windows.Forms.Label();
             this.creditLabel = new System.Windows.Forms.Label();
             this.headerPanel = new System.Windows.Forms.Panel();
             this.logoHeaderPanel = new System.Windows.Forms.Panel();
@@ -65,7 +65,7 @@
             this.wagonDataGridViewPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wagonDataGridView)).BeginInit();
             this.footerPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkConnectionPictureBox)).BeginInit();
             this.headerPanel.SuspendLayout();
             this.logoHeaderPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).BeginInit();
@@ -98,7 +98,7 @@
             // dataUpadatePanel
             // 
             this.dataUpadatePanel.Controls.Add(this.dateLabel);
-            this.dataUpadatePanel.Controls.Add(this.label15);
+            this.dataUpadatePanel.Controls.Add(this.LastDataReceivedLabel);
             this.dataUpadatePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.dataUpadatePanel.Location = new System.Drawing.Point(0, 503);
             this.dataUpadatePanel.Name = "dataUpadatePanel";
@@ -116,16 +116,16 @@
             this.dateLabel.TabIndex = 32;
             this.dateLabel.Text = "Not Available";
             // 
-            // label15
+            // LastDataReceivedLabel
             // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label15.ForeColor = System.Drawing.Color.DarkGray;
-            this.label15.Location = new System.Drawing.Point(19, 16);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(162, 23);
-            this.label15.TabIndex = 31;
-            this.label15.Text = "Last Received Data :";
+            this.LastDataReceivedLabel.AutoSize = true;
+            this.LastDataReceivedLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.LastDataReceivedLabel.ForeColor = System.Drawing.Color.DarkGray;
+            this.LastDataReceivedLabel.Location = new System.Drawing.Point(19, 16);
+            this.LastDataReceivedLabel.Name = "LastDataReceivedLabel";
+            this.LastDataReceivedLabel.Size = new System.Drawing.Size(162, 23);
+            this.LastDataReceivedLabel.TabIndex = 31;
+            this.LastDataReceivedLabel.Text = "Last Received Data :";
             // 
             // wagonDataGridViewPanel
             // 
@@ -151,7 +151,7 @@
             this.Port2Column,
             this.Port3Column,
             this.Port4Column,
-            this.voidColumn});
+            this.dataColumn});
             this.wagonDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.wagonDataGridView.Location = new System.Drawing.Point(0, 0);
             this.wagonDataGridView.Name = "wagonDataGridView";
@@ -161,6 +161,7 @@
             this.wagonDataGridView.ShowCellToolTips = false;
             this.wagonDataGridView.Size = new System.Drawing.Size(1196, 437);
             this.wagonDataGridView.TabIndex = 7;
+            this.wagonDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.wagonDataGridView_CellClick);
             // 
             // nrWagonColumn
             // 
@@ -249,13 +250,13 @@
             this.Port4Column.ReadOnly = true;
             this.Port4Column.Width = 80;
             // 
-            // voidColumn
+            // dataColumn
             // 
-            this.voidColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.voidColumn.HeaderText = "";
-            this.voidColumn.MinimumWidth = 6;
-            this.voidColumn.Name = "voidColumn";
-            this.voidColumn.ReadOnly = true;
+            this.dataColumn.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.dataColumn.HeaderText = "Last Data Received";
+            this.dataColumn.MinimumWidth = 6;
+            this.dataColumn.Name = "dataColumn";
+            this.dataColumn.ReadOnly = true;
             // 
             // wagonLabel
             // 
@@ -283,8 +284,8 @@
             // 
             // footerPanel
             // 
-            this.footerPanel.Controls.Add(this.pictureBox7);
-            this.footerPanel.Controls.Add(this.label16);
+            this.footerPanel.Controls.Add(this.checkConnectionPictureBox);
+            this.footerPanel.Controls.Add(this.checkConnectionLabel);
             this.footerPanel.Controls.Add(this.creditLabel);
             this.footerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.footerPanel.Location = new System.Drawing.Point(0, 626);
@@ -292,26 +293,26 @@
             this.footerPanel.Size = new System.Drawing.Size(1196, 70);
             this.footerPanel.TabIndex = 2;
             // 
-            // pictureBox7
+            // checkConnectionPictureBox
             // 
-            this.pictureBox7.Image = global::TrainProjectWorkApp.Properties.Resources._true;
-            this.pictureBox7.Location = new System.Drawing.Point(132, 12);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(46, 48);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox7.TabIndex = 29;
-            this.pictureBox7.TabStop = false;
+            this.checkConnectionPictureBox.Image = global::TrainProjectWorkApp.Properties.Resources._true;
+            this.checkConnectionPictureBox.Location = new System.Drawing.Point(132, 12);
+            this.checkConnectionPictureBox.Name = "checkConnectionPictureBox";
+            this.checkConnectionPictureBox.Size = new System.Drawing.Size(46, 48);
+            this.checkConnectionPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.checkConnectionPictureBox.TabIndex = 29;
+            this.checkConnectionPictureBox.TabStop = false;
             // 
-            // label16
+            // checkConnectionLabel
             // 
-            this.label16.AutoSize = true;
-            this.label16.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label16.ForeColor = System.Drawing.Color.DarkGray;
-            this.label16.Location = new System.Drawing.Point(19, 23);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(107, 23);
-            this.label16.TabIndex = 28;
-            this.label16.Text = "Connection :";
+            this.checkConnectionLabel.AutoSize = true;
+            this.checkConnectionLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkConnectionLabel.ForeColor = System.Drawing.Color.DarkGray;
+            this.checkConnectionLabel.Location = new System.Drawing.Point(19, 23);
+            this.checkConnectionLabel.Name = "checkConnectionLabel";
+            this.checkConnectionLabel.Size = new System.Drawing.Size(107, 23);
+            this.checkConnectionLabel.TabIndex = 28;
+            this.checkConnectionLabel.Text = "Connection :";
             // 
             // creditLabel
             // 
@@ -434,7 +435,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.wagonDataGridView)).EndInit();
             this.footerPanel.ResumeLayout(false);
             this.footerPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkConnectionPictureBox)).EndInit();
             this.headerPanel.ResumeLayout(false);
             this.logoHeaderPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).EndInit();
@@ -459,8 +460,11 @@
         private System.Windows.Forms.DataGridView wagonDataGridView;
         private System.Windows.Forms.Panel wagonDataGridViewPanel;
         private System.Windows.Forms.Label creditLabel;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.Label checkConnectionLabel;
+        private System.Windows.Forms.PictureBox checkConnectionPictureBox;
+        private System.Windows.Forms.Panel dataUpadatePanel;
+        private System.Windows.Forms.Label LastDataReceivedLabel;
+        private System.Windows.Forms.Label dateLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn nrWagonColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn TemperatureColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn HumidityColumn;
@@ -470,9 +474,6 @@
         private System.Windows.Forms.DataGridViewImageColumn Port2Column;
         private System.Windows.Forms.DataGridViewImageColumn Port3Column;
         private System.Windows.Forms.DataGridViewImageColumn Port4Column;
-        private System.Windows.Forms.DataGridViewTextBoxColumn voidColumn;
-        private System.Windows.Forms.Panel dataUpadatePanel;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label dateLabel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataColumn;
     }
 }

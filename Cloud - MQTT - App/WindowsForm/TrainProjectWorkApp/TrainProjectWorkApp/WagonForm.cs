@@ -75,8 +75,6 @@ namespace TrainProjectWorkApp
             userRole = role;
             userNick = nick;
 
-            
-
             #region MongoDb User List
 
             trainList = MongoDB.Client

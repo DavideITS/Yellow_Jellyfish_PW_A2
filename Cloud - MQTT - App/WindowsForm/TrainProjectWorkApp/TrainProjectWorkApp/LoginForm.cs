@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TrainProjectWorkApp.Properties;
 
 namespace TrainProjectWorkApp
 {
@@ -53,6 +54,19 @@ namespace TrainProjectWorkApp
             InitializeComponent();
 
             Console.Title = "Train Project Work's App";
+
+            #region Check Connection
+
+            if(MongoDB.IsConnected() == true)
+            {
+                checkConnectionPictureBox.Image = Resources._true;
+            }
+            else
+            {
+                checkConnectionPictureBox.Image = Resources.falseDaCambiare;
+            }
+
+            #endregion Check Connection
 
             #region MongoDb User List
 
@@ -160,10 +174,9 @@ namespace TrainProjectWorkApp
                 {
                     Console.WriteLine("Login Corretto");
                     //Estrazione dati utili
-                    var userNick = searchUser.Select(s => new string(s["nick"].ToString().ToCharArray())).First();
                     var userRole = searchUser.Select(s => new string(s["role"].ToString().ToCharArray())).First();
                     //Visione MenuForm
-                    MenuForm mf = new MenuForm(userNick, userRole);
+                    MenuForm mf = new MenuForm(userTextBox.Text, userRole);
                     this.Visible = false;
                     mf.ShowDialog();
                     this.Visible = true;
@@ -201,6 +214,5 @@ namespace TrainProjectWorkApp
 
         #endregion Move Form
 
-        
     }
 }

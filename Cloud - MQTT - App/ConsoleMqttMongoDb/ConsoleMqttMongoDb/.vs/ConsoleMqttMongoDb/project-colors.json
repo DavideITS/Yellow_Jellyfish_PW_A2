@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "04b3c4b4-e428-480a-a1a9-11da67589a7b": {
+      "ProjectGuid": "04b3c4b4-e428-480a-a1a9-11da67589a7b",
+      "DisplayName": "ConsoleMqttMongoDb",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

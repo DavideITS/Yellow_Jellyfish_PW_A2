@@ -17,3 +17,4 @@ C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\SubMe
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\SubMessageMqtt\TestSubMessageMqtt\TestSubMessageMqtt\obj\Debug\net5.0\ref\TestSubMessageMqtt.dll
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\SubMessageMqtt\TestSubMessageMqtt\TestSubMessageMqtt\obj\Debug\net5.0\TestSubMessageMqtt.pdb
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\SubMessageMqtt\TestSubMessageMqtt\TestSubMessageMqtt\obj\Debug\net5.0\TestSubMessageMqtt.genruntimeconfig.cache
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\SubMessageMqtt\TestSubMessageMqtt\TestSubMessageMqtt\obj\Debug\net5.0\TestSubMessageMqtt.csproj.AssemblyReference.cache

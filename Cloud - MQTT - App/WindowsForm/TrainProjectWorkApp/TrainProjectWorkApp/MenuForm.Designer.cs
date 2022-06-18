@@ -34,14 +34,13 @@
             this.creditLabel = new System.Windows.Forms.Label();
             this.fillPanel = new System.Windows.Forms.Panel();
             this.rightPanel = new System.Windows.Forms.Panel();
-            this.trainButton = new System.Windows.Forms.Button();
             this.wagonButton = new System.Windows.Forms.Button();
             this.leftPanel = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.cardPanel = new System.Windows.Forms.Panel();
             this.roleLabel = new System.Windows.Forms.Label();
             this.nameLabel = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.cardImagePanel = new System.Windows.Forms.Panel();
+            this.cardImagePictureBox = new System.Windows.Forms.PictureBox();
             this.menuLabel = new System.Windows.Forms.Label();
             this.titleLabel = new System.Windows.Forms.Label();
             this.headerPanel = new System.Windows.Forms.Panel();
@@ -56,9 +55,9 @@
             this.fillPanel.SuspendLayout();
             this.rightPanel.SuspendLayout();
             this.leftPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.cardPanel.SuspendLayout();
+            this.cardImagePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.cardImagePictureBox)).BeginInit();
             this.headerPanel.SuspendLayout();
             this.logoHeaderPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).BeginInit();
@@ -110,25 +109,12 @@
             // 
             // rightPanel
             // 
-            this.rightPanel.Controls.Add(this.trainButton);
             this.rightPanel.Controls.Add(this.wagonButton);
             this.rightPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.rightPanel.Location = new System.Drawing.Point(250, 119);
             this.rightPanel.Name = "rightPanel";
             this.rightPanel.Size = new System.Drawing.Size(826, 507);
             this.rightPanel.TabIndex = 6;
-            // 
-            // trainButton
-            // 
-            this.trainButton.FlatAppearance.BorderSize = 0;
-            this.trainButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.trainButton.ForeColor = System.Drawing.Color.DarkGray;
-            this.trainButton.Location = new System.Drawing.Point(231, 165);
-            this.trainButton.Name = "trainButton";
-            this.trainButton.Size = new System.Drawing.Size(130, 100);
-            this.trainButton.TabIndex = 0;
-            this.trainButton.Text = "View Train Info";
-            this.trainButton.UseVisualStyleBackColor = true;
             // 
             // wagonButton
             // 
@@ -146,23 +132,23 @@
             // 
             // leftPanel
             // 
-            this.leftPanel.Controls.Add(this.panel1);
+            this.leftPanel.Controls.Add(this.cardPanel);
             this.leftPanel.Dock = System.Windows.Forms.DockStyle.Left;
             this.leftPanel.Location = new System.Drawing.Point(0, 119);
             this.leftPanel.Name = "leftPanel";
             this.leftPanel.Size = new System.Drawing.Size(250, 507);
             this.leftPanel.TabIndex = 5;
             // 
-            // panel1
+            // cardPanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
-            this.panel1.Controls.Add(this.roleLabel);
-            this.panel1.Controls.Add(this.nameLabel);
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Location = new System.Drawing.Point(25, 28);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(201, 358);
-            this.panel1.TabIndex = 0;
+            this.cardPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.cardPanel.Controls.Add(this.roleLabel);
+            this.cardPanel.Controls.Add(this.nameLabel);
+            this.cardPanel.Controls.Add(this.cardImagePanel);
+            this.cardPanel.Location = new System.Drawing.Point(22, 102);
+            this.cardPanel.Name = "cardPanel";
+            this.cardPanel.Size = new System.Drawing.Size(201, 244);
+            this.cardPanel.TabIndex = 0;
             // 
             // roleLabel
             // 
@@ -184,24 +170,24 @@
             this.nameLabel.TabIndex = 1;
             this.nameLabel.Text = "Name";
             // 
-            // panel2
+            // cardImagePanel
             // 
-            this.panel2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel2.Controls.Add(this.pictureBox1);
-            this.panel2.Location = new System.Drawing.Point(29, 27);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(143, 125);
-            this.panel2.TabIndex = 0;
+            this.cardImagePanel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cardImagePanel.Controls.Add(this.cardImagePictureBox);
+            this.cardImagePanel.Location = new System.Drawing.Point(29, 27);
+            this.cardImagePanel.Name = "cardImagePanel";
+            this.cardImagePanel.Size = new System.Drawing.Size(143, 125);
+            this.cardImagePanel.TabIndex = 0;
             // 
-            // pictureBox1
+            // cardImagePictureBox
             // 
-            this.pictureBox1.Image = global::TrainProjectWorkApp.Properties.Resources.user;
-            this.pictureBox1.Location = new System.Drawing.Point(15, 13);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(115, 97);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.cardImagePictureBox.Image = global::TrainProjectWorkApp.Properties.Resources.user;
+            this.cardImagePictureBox.Location = new System.Drawing.Point(15, 13);
+            this.cardImagePictureBox.Name = "cardImagePictureBox";
+            this.cardImagePictureBox.Size = new System.Drawing.Size(115, 97);
+            this.cardImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.cardImagePictureBox.TabIndex = 0;
+            this.cardImagePictureBox.TabStop = false;
             // 
             // menuLabel
             // 
@@ -333,10 +319,10 @@
             this.fillPanel.ResumeLayout(false);
             this.rightPanel.ResumeLayout(false);
             this.leftPanel.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.cardPanel.ResumeLayout(false);
+            this.cardPanel.PerformLayout();
+            this.cardImagePanel.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.cardImagePictureBox)).EndInit();
             this.headerPanel.ResumeLayout(false);
             this.logoHeaderPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).EndInit();
@@ -357,14 +343,13 @@
         private System.Windows.Forms.Button minimizeButton;
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Panel leftPanel;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel cardPanel;
+        private System.Windows.Forms.Panel cardImagePanel;
         private System.Windows.Forms.Label menuLabel;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox cardImagePictureBox;
         private System.Windows.Forms.Label roleLabel;
         private System.Windows.Forms.Label nameLabel;
         private System.Windows.Forms.Panel rightPanel;
-        private System.Windows.Forms.Button trainButton;
         private System.Windows.Forms.Button wagonButton;
         private System.Windows.Forms.Panel logoHeaderPanel;
         private System.Windows.Forms.PictureBox appPictureBox;

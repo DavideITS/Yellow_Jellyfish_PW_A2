@@ -21,6 +21,8 @@ namespace TrainProjectWorkApp
 {
     public partial class SeeWagonForm : Form
     {
+        #region Variabili
+
         static int nrTrain = 0;
 
         List<Dictionary<string, object>> trainList = new List<Dictionary<string, object>>();
@@ -66,8 +68,13 @@ namespace TrainProjectWorkApp
         int port2IndexColumn = 6;
         int port3IndexColumn = 7;
         int port4IndexColumn = 8;
+        int dataReceivedCOlumn = 9;
 
         #endregion
+
+        #endregion Variabili
+
+        #region Costruttore
 
         public SeeWagonForm(int train)
         {
@@ -84,17 +91,7 @@ namespace TrainProjectWorkApp
 
             nrTrain = train;
 
-            #region MongoDb User List
-
-            trainList = MongoDB.Client
-                    .GetDatabase("trainProjectWork")
-                    .GetCollection<Dictionary<string, object>>("Trains")
-                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
-                   .ToList();
-
-            #endregion MongoDb User List
-
-            seeWagonList(nrTrain);
+            listBackupRow.Clear();
 
             #region Mqtt
 
@@ -156,17 +153,16 @@ namespace TrainProjectWorkApp
 
                             int nrRow = wagonDataGridView.Rows.Count;
 
-                            for(int i = 0; i < nrRow; i++)
+                            for (int i = 0; i < nrRow; i++)
                             {
                                 if (int.Parse(wagonDataGridView.Rows[i].Cells[nrWagonIndexColumn].Value.ToString()) == int.Parse(json["nrWagon"].ToString()))
                                 {
-                                    dateLabel.Text = DateTime.Now.ToString();
                                     wagonDataGridView.Rows[i].Cells[temperatureIndexColumn].Value = $"{json["Temp"].ToString()} °C";
                                     wagonDataGridView.Rows[i].Cells[humidityIndexColumn].Value = $"{json["Hum"].ToString()} %";
 
                                     if (bool.Parse(json["Smoke"].ToString()) == true)
                                     {
-                                        if(!listBackupRow[i][smokeIndexColumn].Equals("true"))
+                                        if (!listBackupRow[i][smokeIndexColumn].Equals("true"))
                                         {
                                             wagonDataGridView.Rows[i].Cells[smokeIndexColumn].Value = Resources._true;
                                             listBackupRow[i][smokeIndexColumn] = "true";
@@ -260,6 +256,8 @@ namespace TrainProjectWorkApp
                                             listBackupRow[i][port4IndexColumn] = "false";
                                         }
                                     }
+                                    wagonDataGridView.Rows[i].Cells[dataReceivedCOlumn].Value = DateTime.Now.ToString("HH:mm:ss");
+                                    dateLabel.Text = DateTime.Now.ToString();
                                 }
                             }
                         }));
@@ -272,6 +270,38 @@ namespace TrainProjectWorkApp
 
             #endregion Mqtt
 
+            #region Check Connection
+
+            if (MongoDB.IsConnected() == true)
+            {
+                if(_mqttClient.IsConnected == true)
+                {
+                    checkConnectionPictureBox.Image = Resources._true;
+                }
+                else
+                {
+                    checkConnectionPictureBox.Image = Resources.falseDaCambiare;
+                }
+            }
+            else
+            {
+                checkConnectionPictureBox.Image = Resources.falseDaCambiare;
+            }
+
+            #endregion Check Connection
+
+            #region MongoDb Train List
+
+            trainList = MongoDB.Client
+                    .GetDatabase("trainProjectWork")
+                    .GetCollection<Dictionary<string, object>>("Trains")
+                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                   .ToList();
+
+            #endregion MongoDb Train List
+
+            seeWagonList(nrTrain);
+
             #region WaitForm Close
 
             wf.Close();
@@ -279,6 +309,11 @@ namespace TrainProjectWorkApp
             #endregion WaitForm Close
         }
 
+        #endregion Costruttore
+
+        #region DataGridView
+
+        //Metodo per popolare la DataGridView e la lista usata per i confronti
         private void seeWagonList(int train)
         {
             wagonDataGridView.Visible = false;
@@ -286,6 +321,10 @@ namespace TrainProjectWorkApp
             wagonDataGridView.AllowUserToAddRows = true;
 
             wagonDataGridView.Rows.Clear();
+
+            wagonDataGridView.Columns[nrWagonIndexColumn].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            wagonDataGridView.Columns[temperatureIndexColumn].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            wagonDataGridView.Columns[humidityIndexColumn].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
             List<DataGridViewRow> listRow = new List<DataGridViewRow>();
 
@@ -335,8 +374,17 @@ namespace TrainProjectWorkApp
             wagonDataGridView.Visible = true;
         }
 
+        //Metodo usato quando viene cliccata una cella nella DataGridView
+        private void wagonDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        #endregion DataGridView
+
         #region Metodi usati per la connessione con MQTT
 
+        //Quando avviene la connessione con Mqtt
         public static void OnConnected(MqttClientConnectedEventArgs obj)
         {
             string topicToReceive = $"trainProjectWork/{nrTrain}/liveData/#";
@@ -346,17 +394,28 @@ namespace TrainProjectWorkApp
             Console.WriteLine("Successfully connected.");
         }
 
+        //In caso di connessione fallita
         public static void OnConnectingFailed(ManagedProcessFailedEventArgs obj)
         {
             Console.WriteLine("Couldn't connect to broker.");
         }
 
+        //In caso di disconnessione
         public static void OnDisconnected(MqttClientDisconnectedEventArgs obj)
         {
             Console.WriteLine("Successfully disconnected.");
         }
 
+        //Quando si vuole chiudere il form
+        private void SeeWagonForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Viene stoppato il client mqtt
+            _mqttClient.StopAsync();
+        }
+
         #endregion Metodi usati per la connessione con MQTT
+
+        #region Move Form
 
         //Se si vuole chiudere l'app
         private void closeButton_Click(object sender, EventArgs e)
@@ -403,9 +462,6 @@ namespace TrainProjectWorkApp
             }
         }
 
-        private void SeeWagonForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            _mqttClient.StopAsync();
-        }
+        #endregion Move Form
     }
 }

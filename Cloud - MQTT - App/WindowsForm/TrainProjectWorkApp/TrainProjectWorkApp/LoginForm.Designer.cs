@@ -53,6 +53,8 @@
             this.logoHeaderPanel = new System.Windows.Forms.Panel();
             this.appPictureBox = new System.Windows.Forms.PictureBox();
             this.headerTitleLabel = new System.Windows.Forms.Label();
+            this.checkConnectionLabel = new System.Windows.Forms.Label();
+            this.checkConnectionPictureBox = new System.Windows.Forms.PictureBox();
             this.formPanel.SuspendLayout();
             this.footerPanel.SuspendLayout();
             this.fillPanel.SuspendLayout();
@@ -64,6 +66,7 @@
             this.headerPanel.SuspendLayout();
             this.logoHeaderPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkConnectionPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // formPanel
@@ -80,6 +83,8 @@
             // 
             // footerPanel
             // 
+            this.footerPanel.Controls.Add(this.checkConnectionPictureBox);
+            this.footerPanel.Controls.Add(this.checkConnectionLabel);
             this.footerPanel.Controls.Add(this.creditLabel);
             this.footerPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.footerPanel.Location = new System.Drawing.Point(0, 626);
@@ -374,6 +379,27 @@
             this.headerTitleLabel.DoubleClick += new System.EventHandler(this.resizeButton_Click);
             this.headerTitleLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.headerTitleLabel_MouseMove);
             // 
+            // checkConnectionLabel
+            // 
+            this.checkConnectionLabel.AutoSize = true;
+            this.checkConnectionLabel.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.checkConnectionLabel.ForeColor = System.Drawing.Color.DarkGray;
+            this.checkConnectionLabel.Location = new System.Drawing.Point(25, 23);
+            this.checkConnectionLabel.Name = "checkConnectionLabel";
+            this.checkConnectionLabel.Size = new System.Drawing.Size(107, 23);
+            this.checkConnectionLabel.TabIndex = 29;
+            this.checkConnectionLabel.Text = "Connection :";
+            // 
+            // checkConnectionPictureBox
+            // 
+            this.checkConnectionPictureBox.Image = global::TrainProjectWorkApp.Properties.Resources._true;
+            this.checkConnectionPictureBox.Location = new System.Drawing.Point(138, 12);
+            this.checkConnectionPictureBox.Name = "checkConnectionPictureBox";
+            this.checkConnectionPictureBox.Size = new System.Drawing.Size(46, 48);
+            this.checkConnectionPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.checkConnectionPictureBox.TabIndex = 30;
+            this.checkConnectionPictureBox.TabStop = false;
+            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -388,6 +414,7 @@
             this.Text = "Login";
             this.formPanel.ResumeLayout(false);
             this.footerPanel.ResumeLayout(false);
+            this.footerPanel.PerformLayout();
             this.fillPanel.ResumeLayout(false);
             this.passwordPanel.ResumeLayout(false);
             this.passwordCenterPanel.ResumeLayout(false);
@@ -399,6 +426,7 @@
             this.headerPanel.ResumeLayout(false);
             this.logoHeaderPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.appPictureBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.checkConnectionPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -429,5 +457,7 @@
         private System.Windows.Forms.Button closeButton;
         private System.Windows.Forms.Panel userCenterPanel;
         private System.Windows.Forms.Panel passwordCenterPanel;
+        private System.Windows.Forms.Label checkConnectionLabel;
+        private System.Windows.Forms.PictureBox checkConnectionPictureBox;
     }
 }

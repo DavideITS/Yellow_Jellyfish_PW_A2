@@ -42,3 +42,4 @@ C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WindowsFor
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WindowsForm\TrainProjectWorkApp\TrainProjectWorkApp\bin\Debug\net5.0-windows\runtimes\win\native\mongocrypt.dll
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WindowsForm\TrainProjectWorkApp\TrainProjectWorkApp\obj\Debug\net5.0-windows\TrainProjectWorkApp.WagonForm.resources
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WindowsForm\TrainProjectWorkApp\TrainProjectWorkApp\obj\Debug\net5.0-windows\TrainProjectWorkApp.SeeWagonForm.resources
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WindowsForm\TrainProjectWorkApp\TrainProjectWorkApp\obj\Debug\net5.0-windows\TrainProjectWorkApp.SeeTrainForm.resources

@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
+using System.Net.NetworkInformation;
 using System.Text.Json;
 
 namespace TrainProjectWorkApp
@@ -13,10 +14,11 @@ namespace TrainProjectWorkApp
         {
             try
             {
-                return MongoDB.Client.GetDatabase("yugiohCardDb").RunCommandAsync((Command<JsonDocument>)"{ping:1}").Wait(2000);
+                return MongoDB.Client.GetDatabase("trainProjectWork").RunCommandAsync((Command<JsonDocument>)"{ping:1}").Wait(3000);
             }
-            catch (Exception)
+            catch (Exception err)
             {
+                Console.WriteLine(err.Message);
                 return false;
             }
         }

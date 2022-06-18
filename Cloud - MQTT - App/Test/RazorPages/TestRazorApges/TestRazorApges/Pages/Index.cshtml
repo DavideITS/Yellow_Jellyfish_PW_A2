@@ -1,0 +1,47 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="conteiner">
+    <div class="text-center">
+        <h1>TrainProjectWork</h1>
+        <h3>Login</h3>
+        <img class="userImg" src="img/user.png" alt="User Img">
+        <br />
+        <table>
+  <tr>
+    <th>@Model.textToChange</th>
+    <th>Lastname</th>
+    <th>Age</th>
+  </tr>
+  <tr>
+    <td>Black</td>
+    <td>Vaccine</td>
+    <td>21</td>
+  </tr>
+  <tr>
+    <td>Nabil</td>
+    <td>Ahmed</td>
+    <td>16</td>
+  </tr>
+</table>
+
+        <form method="POST">
+            <label for="Username">Username:</label>
+            <label asp-for="Username">
+                <input type="text" id="username" name="username" required>
+            </label>
+            <br />
+            <label for="password">Password:</label>
+            <label asp-for="Password">
+                <input type="password" id="password" name="password" required>
+            </label>
+            <br />
+            <input type="submit">
+        </form>
+
+    </div>
+</div>
+

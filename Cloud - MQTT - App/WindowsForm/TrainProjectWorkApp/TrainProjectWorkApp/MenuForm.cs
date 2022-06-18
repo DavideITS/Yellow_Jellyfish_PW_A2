@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,8 +14,12 @@ namespace TrainProjectWorkApp
 {
     public partial class MenuForm : Form
     {
+        #region Variabili
+
         string userNick = "";
         string userRole = "";
+
+        List<Dictionary<string, object>> trainList = new List<Dictionary<string, object>>();
 
         #region Emoji
 
@@ -30,6 +35,10 @@ namespace TrainProjectWorkApp
         public const int HT_CAPTION = 0x2;
 
         #endregion Move Form
+
+        #endregion Variabili
+
+        #region Costruttore
 
         public MenuForm(string nick, string role)
         {
@@ -55,15 +64,24 @@ namespace TrainProjectWorkApp
 
             if (userRole.Equals("Null"))
             {
-                trainButton.Visible = false;
-                wagonButton.Visible = true;
-            }else
+                wagonButton.Text = "View Wagon Info";
+            }
+            else
             {
-                trainButton.Visible = true;
-                wagonButton.Visible = false;
+                wagonButton.Text = "View Train Info";
             }
 
             #endregion Layout in base al Ruolo
+
+            #region MongoDb Train List
+
+            trainList = MongoDB.Client
+                    .GetDatabase("trainProjectWork")
+                    .GetCollection<Dictionary<string, object>>("Trains")
+                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                   .ToList();
+
+            #endregion MongoDb Train List
 
             #region WaitForm Close
 
@@ -72,6 +90,10 @@ namespace TrainProjectWorkApp
             #endregion WaitForm Close
 
         }
+
+        #endregion Costruttore
+
+        #region Move Form
 
         //Se si vuole chiudere l'app
         private void closeButton_Click(object sender, EventArgs e)
@@ -118,6 +140,10 @@ namespace TrainProjectWorkApp
             }
         }
 
+        #endregion Move Form
+
+        #region Button
+
         //Quando si schiaccia il pulsante per vedere le informazioni dei vagoni
         private void wagonButton_Click(object sender, EventArgs e)
         {
@@ -128,18 +154,37 @@ namespace TrainProjectWorkApp
             this.Visible = true;
             */
 
+            //Controllo del Form da aprire in base al ruolo
+            //Se persona normale -> Avrà 1 solo treno e vede subito i corrispettivi vagoni
+            //Se Admin o CapoStazione -> Vede tutti i treni e successivamente vede i vagoni del treno che sceglierà
             if (userRole.Equals("Null"))
             {
-                SeeWagonForm swf = new SeeWagonForm(1);
-                this.Visible = false;
-                swf.ShowDialog();
-                this.Visible = true;
+                //Query per ricavare il numero del treno a lui associato
+                int nrTrain = trainList.Where(s => s["conductor"].ToString().Equals(userNick)).Select(s => int.Parse(s["nrTrain"].ToString())).FirstOrDefault();
+                if(nrTrain != 0)
+                {
+                    SeeWagonForm swf = new SeeWagonForm(nrTrain);
+                    this.Visible = false;
+                    swf.ShowDialog();
+                    this.Visible = true;
+                }
+                else
+                {
+                    //Nessun treno associato
+                    //Mostro un form di errore
+                }
             }
             else
             {
                 //(SeeTrainForm)
                 //Mostro prima Form treni, poi dai Form Treni passa al SeeWagonForm
+                SeeTrainForm stf = new SeeTrainForm();
+                this.Visible = false;
+                stf.ShowDialog();
+                this.Visible = true;
             }
         }
+
+        #endregion Button
     }
 }
