@@ -24,6 +24,9 @@ namespace TestRazorApges.Pages
         [BindProperty]
         public string textToChange { get; set; }
 
+        [BindProperty]
+        public int variableToPass { get; set; }
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -55,7 +58,7 @@ namespace TestRazorApges.Pages
                 if (searchUser.Count() > 0)
                 {
                     Console.WriteLine("Login Corretto");
-                    return RedirectToPage("SeeWagon");
+                    return RedirectToPage("SeeWagon","1");
                 }
                 else
                 {
@@ -69,5 +72,7 @@ namespace TestRazorApges.Pages
             }
 
         }
+
+        
     }
 }

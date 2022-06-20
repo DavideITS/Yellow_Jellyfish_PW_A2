@@ -22,7 +22,7 @@
     <td>21</td>
   </tr>
   <tr>
-    <td>Nabil</td>
+    <td class="testtesttest">Nabil</td>
     <td>Ahmed</td>
     <td>16</td>
   </tr>
@@ -44,4 +44,17 @@
 
     </div>
 </div>
+
+<script type="text/javascript">
+
+    var doc = document.getElementsByClassName("testtesttest");
+    var myElement = doc[0];
+    myElement.addEventListener("click", function() {
+        test(1);
+    });
+
+	function test(y){
+	    window.location.href = "https://localhost:44365/SeeWagon?handler=" + y
+    }
+</script>
 
