@@ -1,5 +1,9 @@
 # MQTT
 
+Broker:
+
+        Mqtt broker written in c #
+
 Options:
 
         Ip: To Be Defined
@@ -7,6 +11,5 @@ Options:
 
 Topic: 
 
-        trainProjectWork/idTrain/idPic/liveData
-                                      /command
-                                      /error (?)
+        trainProjectWork/idTrain(numeric)/liveData
+                                         /command
