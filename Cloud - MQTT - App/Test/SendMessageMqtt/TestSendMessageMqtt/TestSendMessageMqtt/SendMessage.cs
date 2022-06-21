@@ -86,7 +86,7 @@ namespace TestSendMessageMqtt
                     string json = "";
                     if(countSendMessage == 0)
                     {
-                        json = "{\"nrWagon\":1,\"Temp\":22.6,\"Hum\":59.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,false,false]}";
+                        json = "{\"nrWagon\":1,\"Temp\":21.9,\"Hum\":59.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,false,false]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 1)

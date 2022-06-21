@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Driver;
+using Microsoft.AspNetCore.Http;
 
 namespace TestRazorApges.Pages
 {
@@ -58,6 +59,8 @@ namespace TestRazorApges.Pages
                 if (searchUser.Count() > 0)
                 {
                     Console.WriteLine("Login Corretto");
+                    string role = searchUser.Select(s => new string(s["role"].ToString())).FirstOrDefault();
+                    HttpContext.Session.SetString("role", role);
                     return RedirectToPage("SeeWagon","1");
                 }
                 else

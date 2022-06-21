@@ -54,3 +54,6 @@ C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\Razor
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\obj\Debug\net5.0\TestRazorApges.pdb
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\obj\Debug\net5.0\TestRazorApges.genruntimeconfig.cache
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\obj\Debug\net5.0\Razor\Pages\SeeWagon.cshtml.g.cs
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\bin\Debug\net5.0\MQTTnet.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\bin\Debug\net5.0\MQTTnet.Extensions.ManagedClient.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\Test\RazorPages\TestRazorApges\TestRazorApges\bin\Debug\net5.0\Newtonsoft.Json.dll

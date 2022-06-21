@@ -24,6 +24,12 @@ namespace TestRazorApges
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(180);
+            });
+            services.AddMemoryCache();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +52,17 @@ namespace TestRazorApges
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseStaticFiles();
+            app.UseSession();
+            /*
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action=Index}/{id?}");
+            });
+            */
 
             app.UseEndpoints(endpoints =>
             {

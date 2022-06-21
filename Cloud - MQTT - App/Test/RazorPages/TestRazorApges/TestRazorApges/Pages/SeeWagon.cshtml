@@ -4,6 +4,77 @@
     ViewData["Title"] = "Wagon";
 }
 
-<div class="conteiner">
+    <div class="conteiner">
     SeeWagon
+
+<table>
+    <tr>
+    <th>Nr° Wagon</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+    <th>Toilette</th>
+    <th>Date</th>
+  </tr>
+@for(var i = 0; i < @Model.nrWagon ; i++)
+    {
+        <tr>
+
+    <td>@Model.trainLiveDataFilterList[i]["nrWagon"]
+     </td>
+    <td class="sendTemp">@Model.trainLiveDataFilterList[i]["Temp"] °C</td>
+    <td>@Model.trainLiveDataFilterList[i]["Hum"] %</td>
+    @{bool toilette=bool.Parse(@Model.trainLiveDataFilterList[i]["Toilette"].ToString());}
+                @if(toilette == true)
+                {
+                    <td>
+                    <img class="tableImg" src="img/true.png" alt="True Img">
+                    </td>
+                }
+                else
+                {
+                    <td>
+                    <img class="tableImg" src="img/falseDaCambiare.jpg" alt="False Img">
+                    </td>
+                }
+    <td>@Model.trainLiveDataFilterList[i]["date"] %</td>
+            </tr>
+    
+    }
+</table>
 </div>
+
+<script type="text/javascript">
+
+    var iTest = "hey"
+
+    var docSendTempList = document.getElementsByClassName("sendTemp");
+
+    iTest = docSendTempList.length;
+
+    for (let i = 0; i < docSendTempList.length; i++) {
+	    var docSendTemp = docSendTempList[i];
+        iTest = "ok1"
+        docSendTemp.addEventListener("click", function() {
+            testChangeData("1-" + (i+1) + "-Temp");
+        });
+    }
+
+	function testChangeData(y){
+        console.log(window.location.href)
+	    console.log(y)
+
+        iTest = y.split("-");
+
+        //Cosa si vuole cambiare
+        console.log(iTest[2])
+
+        //Nr vagone
+        console.log(iTest[1])
+
+        //Nr treno
+        console.log(iTest[0])
+
+        //Faccio prima degli if in base a iTest[2]
+        //window.location.href = "https://localhost:44365/ChangeData?handler=" + y
+    }
+</script>

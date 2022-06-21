@@ -79,7 +79,7 @@ namespace ConsoleMqttMongoDb
                 Dictionary<string, object> objToInsert = new Dictionary<string, object>();
 
                 objToInsert.Add("date", DateTime.Now);
-                objToInsert.Add("nrTrain", topicSplit[1]);
+                objToInsert.Add("nrTrain", int.Parse(topicSplit[1].ToString()));
 
                 foreach (var jsonElement in json)
                 {
