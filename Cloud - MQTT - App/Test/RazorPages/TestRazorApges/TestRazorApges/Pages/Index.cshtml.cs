@@ -35,7 +35,9 @@ namespace TestRazorApges.Pages
 
         public void OnGet()
         {
-            
+            //Null se non c'è, se c'è reindirizzo in base al ruolo
+            var testSession = HttpContext.Session.GetString("role");
+            var nrTrainFromSession = HttpContext.Session.GetString("nrTrain");
         }
 
         public IActionResult OnPost()
@@ -61,6 +63,7 @@ namespace TestRazorApges.Pages
                     Console.WriteLine("Login Corretto");
                     string role = searchUser.Select(s => new string(s["role"].ToString())).FirstOrDefault();
                     HttpContext.Session.SetString("role", role);
+                    HttpContext.Session.SetString("nrTrain", "1");
                     return RedirectToPage("SeeWagon","1");
                 }
                 else

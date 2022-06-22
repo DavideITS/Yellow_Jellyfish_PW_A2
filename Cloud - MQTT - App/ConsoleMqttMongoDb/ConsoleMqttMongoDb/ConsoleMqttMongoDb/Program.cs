@@ -17,7 +17,7 @@ namespace ConsoleMqttMongoDb
         //Client Mqtt
         static IManagedMqttClient _mqttClient;
         //Topic nel quale ricevere i messaggi
-        static string topicToReceive = "trainProjectWork/#";
+        static string topicToReceive = "trainProjectWork/+/liveData/#";
         //Tempo in secondi tra ogni tentativo di riconnessione
         static int timeMqttReconnect = 5;
         //Nr di porta di Mqtt
@@ -65,69 +65,72 @@ namespace ConsoleMqttMongoDb
             #region Quando vengono ricevuti messaggi da MQTT
             _mqttClient.UseApplicationMessageReceivedHandler(e =>
             {
-                //Estrazione Messaggio ricevuto
-                var data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-                //Convert da Stringa Json a Json
-                JObject json = JObject.Parse(data);
-                //Estrazione topic
-                string topic = e.ApplicationMessage.Topic;
-                //Split del topic tramite "/"
-                string[] topicSplit = topic.Split("/");
-
-                Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topic}\nData: {data}");
-
-                Dictionary<string, object> objToInsert = new Dictionary<string, object>();
-
-                objToInsert.Add("date", DateTime.Now);
-                objToInsert.Add("nrTrain", int.Parse(topicSplit[1].ToString()));
-
-                foreach (var jsonElement in json)
+                if(e.ApplicationMessage.Payload != null)
                 {
-                    if (!jsonElement.Key.ToString().ToLower().Equals("port"))
+                    //Estrazione Messaggio ricevuto
+                    var data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                    //Convert da Stringa Json a Json
+                    JObject json = JObject.Parse(data);
+                    //Estrazione topic
+                    string topic = e.ApplicationMessage.Topic;
+                    //Split del topic tramite "/"
+                    string[] topicSplit = topic.Split("/");
+
+                    Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topic}\nData: {data}");
+
+                    Dictionary<string, object> objToInsert = new Dictionary<string, object>();
+
+                    objToInsert.Add("date", DateTime.Now);
+                    objToInsert.Add("nrTrain", int.Parse(topicSplit[1].ToString()));
+
+                    foreach (var jsonElement in json)
                     {
-                        //Tentativi di conversione in bool, float e successivamente int
-                        //Se la conversione non è possibile in alcun caso, il dato viene considerato come stringa
-                        bool resultBoolConvert = false;
-                        if (bool.TryParse(jsonElement.Value.ToString(), out resultBoolConvert))
+                        if (!jsonElement.Key.ToString().ToLower().Equals("port"))
                         {
-                            objToInsert.Add(jsonElement.Key, resultBoolConvert);
-                        }
-                        else
-                        {
-                            double resultFloatConvert = 0;
-                            if (double.TryParse(jsonElement.Value.ToString(), out resultFloatConvert))
+                            //Tentativi di conversione in bool, float e successivamente int
+                            //Se la conversione non è possibile in alcun caso, il dato viene considerato come stringa
+                            bool resultBoolConvert = false;
+                            if (bool.TryParse(jsonElement.Value.ToString(), out resultBoolConvert))
                             {
-                                objToInsert.Add(jsonElement.Key, resultFloatConvert);
+                                objToInsert.Add(jsonElement.Key, resultBoolConvert);
                             }
                             else
                             {
-                                int resultIntConvert = 0;
-                                if (int.TryParse(jsonElement.Value.ToString(), out resultIntConvert))
+                                double resultFloatConvert = 0;
+                                if (double.TryParse(jsonElement.Value.ToString(), out resultFloatConvert))
                                 {
-                                    objToInsert.Add(jsonElement.Key, resultIntConvert);
+                                    objToInsert.Add(jsonElement.Key, resultFloatConvert);
                                 }
                                 else
                                 {
-                                    objToInsert.Add(jsonElement.Key, jsonElement.Value.ToString());
+                                    int resultIntConvert = 0;
+                                    if (int.TryParse(jsonElement.Value.ToString(), out resultIntConvert))
+                                    {
+                                        objToInsert.Add(jsonElement.Key, resultIntConvert);
+                                    }
+                                    else
+                                    {
+                                        objToInsert.Add(jsonElement.Key, jsonElement.Value.ToString());
+                                    }
                                 }
                             }
                         }
-                    }
-                    else
-                    {
-                        var portValues = jsonElement.Value;
-                        int count = 1;
-                        foreach (var port in portValues)
+                        else
                         {
-                            objToInsert.Add(jsonElement.Key + count.ToString(), bool.Parse(port.ToString()));
-                            count++;
+                            var portValues = jsonElement.Value;
+                            int count = 1;
+                            foreach (var port in portValues)
+                            {
+                                objToInsert.Add(jsonElement.Key + count.ToString(), bool.Parse(port.ToString()));
+                                count++;
+                            }
                         }
+
                     }
+                    //Dict finito, ora lo devo inserire nel db
+                    MongoDb.Client.GetDatabase("trainProjectWork").GetCollection<Dictionary<string, object>>("TrainLiveData").InsertOne(objToInsert);
 
                 }
-                //Dict finito, ora lo devo inserire nel db
-                MongoDb.Client.GetDatabase("trainProjectWork").GetCollection<Dictionary<string, object>>("TrainLiveData").InsertOne(objToInsert);
-
             });
             #endregion Quando vengono ricevuti messaggi da MQTT
 

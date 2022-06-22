@@ -1,0 +1,27 @@
+﻿@page
+@model TrainProjectWorkWebApp.Pages.ConfermDataSendModel
+@{
+    ViewData["Title"] = "Conferm Data Send";
+}
+
+<h1>TrainProjectWork</h1>
+<h3>@Model.ResultStr</h3>
+
+<br />
+<button type="button" class="home">Home</button>
+<br /><br />
+<button type="button" class="logout">Logout</button>
+
+<script type="text/javascript">
+    //Logout
+    var logoutList = document.getElementsByClassName("logout");
+    logoutList[0].addEventListener("click", function() {
+            window.location.href = "https://localhost:44305/Index?handler=Logout"
+        });
+
+        //Home
+    var homeList = document.getElementsByClassName("home");
+    homeList[0].addEventListener("click", function() {
+            window.location.href = "https://localhost:44305/Login";
+        });
+</script>

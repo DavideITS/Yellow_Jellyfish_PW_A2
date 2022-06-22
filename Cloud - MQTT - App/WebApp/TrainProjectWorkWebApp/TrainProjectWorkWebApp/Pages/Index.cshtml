@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+    <div class="text-center">
+        <h1>TrainProjectWork</h1>
+        <h3>Login</h3>
+        <br />
+        <img class="userImg" src="img/user.png" alt="User Img">
+        <br />
+        <label class="errorToSee">@Model.ErrorToSee</label>
+
+        <form method="POST">
+            <table class="center">
+                <tr>
+                    <td>
+                        <label for="Username">Username:</label>
+                    </td>
+                    <td>
+                        <label asp-for="Username">
+                <input type="text" id="username" name="username" required>
+            </label>
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td>
+                        <label for="password">Password:</label>
+                    </td>
+                    <td>
+                        <label asp-for="Password">
+                <input type="password" id="password" name="password" required>
+            </label>
+                    </td>
+                </tr>
+            </table>
+            <br />
+            <input type="submit" value="Login">
+        </form>
+
+    </div>
+

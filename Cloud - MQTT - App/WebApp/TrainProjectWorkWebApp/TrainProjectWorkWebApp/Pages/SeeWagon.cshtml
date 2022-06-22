@@ -1,0 +1,197 @@
+﻿@page
+@model TrainProjectWorkWebApp.Pages.SeeWagonModel
+@{
+    ViewData["Title"] = "See Wagon";
+}
+<h1>TrainProjectWork</h1>
+        <h3>See Wagon</h3>
+        <button type="button" class="logout right">Logout</button>
+        <button type="button" class="update left">Update</button>
+        <label class="center">Train Nr° @Model.nrTrain</label>
+        <br /><br />
+
+<table>
+    <tr>
+    <th class="center width10">Nr° Wagon</th>
+    <th>Temperature</th>
+    <th>Humidity</th>
+    <th>Smoke</th>
+    <th class="width10">Toilette</th>
+    <th class="width10">Port 1</th>
+    <th class="width10">Port 2</th>
+    <th class="width10">Port 3</th>
+    <th class="width10">Port 4</th>
+    <th>Date</th>
+  </tr>
+@for(var i = 0; i < @Model.nrWagon ; i++)
+    {
+        <tr>
+
+    <td class="center">@Model.trainLiveDataFilterList[i]["nrWagon"]
+     </td>
+    <td class="sendTemp center">@Model.trainLiveDataFilterList[i]["Temp"] °C</td>
+    <td class="center">@Model.trainLiveDataFilterList[i]["Hum"]%</td>
+    @{bool smoke=bool.Parse(@Model.trainLiveDataFilterList[i]["Smoke"].ToString());}
+                @if(smoke == true)
+                {
+                    <td class="sendSmoke center">
+                    <img class="tableImg" src="img/true.png" alt="True Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendSmoke center">
+                    <img class="tableImg" src="img/falseDaCambiare.jpg" alt="False Img">
+                    </td>
+                }
+    @{bool toilette=bool.Parse(@Model.trainLiveDataFilterList[i]["Toilette"].ToString());}
+                @if(toilette == true)
+                {
+                    <td class="sendToilette center">
+                    <img class="tableImg" src="img/open.png" alt="Open Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendToilette center">
+                    <img class="tableImg" src="img/lock.png" alt="Lock Img">
+                    </td>
+                }
+                @{bool port1=bool.Parse(@Model.trainLiveDataFilterList[i]["Port1"].ToString());}
+                @if(port1 == true)
+                {
+                    <td class="sendPort1 center">
+                    <img class="tableImg" src="img/open.png" alt="Open Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendPort1 center">
+                    <img class="tableImg" src="img/lock.png" alt="Lock Img">
+                    </td>
+                }
+                @{bool port2=bool.Parse(@Model.trainLiveDataFilterList[i]["Port2"].ToString());}
+                @if(port2 == true)
+                {
+                    <td class="sendPort2 center">
+                    <img class="tableImg" src="img/open.png" alt="Open Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendPort2 center">
+                    <img class="tableImg" src="img/lock.png" alt="Lock Img">
+                    </td>
+                }
+                @{bool port3=bool.Parse(@Model.trainLiveDataFilterList[i]["Port3"].ToString());}
+                @if(port3 == true)
+                {
+                    <td class="sendPort3 center">
+                    <img class="tableImg" src="img/open.png" alt="Open Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendPort3 center">
+                    <img class="tableImg" src="img/lock.png" alt="Lock Img">
+                    </td>
+                }
+                @{bool port4=bool.Parse(@Model.trainLiveDataFilterList[i]["Port4"].ToString());}
+                @if(port4 == true)
+                {
+                    <td class="sendPort4 center">
+                    <img class="tableImg" src="img/open.png" alt="Open Img">
+                    </td>
+                }
+                else
+                {
+                    <td class="sendPort4 center">
+                    <img class="tableImg" src="img/lock.png" alt="Lock Img">
+                    </td>
+                }
+    <td>@Model.trainLiveDataFilterList[i]["date"]</td>
+            </tr>
+    
+    }
+</table>
+
+<script type="text/javascript">
+
+    var docSendTempList = document.getElementsByClassName("sendTemp");
+    var docSendToiletteList = document.getElementsByClassName("sendToilette");
+    var docSendPort1List = document.getElementsByClassName("sendPort1");
+    var docSendPort2List = document.getElementsByClassName("sendPort2");
+    var docSendPort3List = document.getElementsByClassName("sendPort3");
+    var docSendPort4List = document.getElementsByClassName("sendPort4");
+
+
+    for (let i = 0; i < docSendTempList.length; i++) {
+	    var docSendTemp = docSendTempList[i];
+        var docSendToilette = docSendToiletteList[i];
+        var docSendPort1 = docSendPort1List[i];
+        var docSendPort2 = docSendPort2List[i];
+        var docSendPort3 = docSendPort3List[i];
+        var docSendPort4 = docSendPort4List[i];
+
+        docSendTemp.addEventListener("click", function() {
+            changeData("1-" + (i+1) + "-Temp");
+        });
+
+        docSendToilette.addEventListener("click", function() {
+            changeData(@Model.nrTrain + "-" + (i+1) + "-Toilette");
+        });
+
+        docSendPort1.addEventListener("click", function() {
+            changeData(@Model.nrTrain + "-" + (i+1) + "-Port1");
+        });
+
+        docSendPort2.addEventListener("click", function() {
+            changeData(@Model.nrTrain + "-" + (i+1) + "-Port2");
+        });
+
+        docSendPort3.addEventListener("click", function() {
+            changeData(@Model.nrTrain + "-" + (i+1) + "-Port3");
+        });
+
+        docSendPort4.addEventListener("click", function() {
+            changeData(@Model.nrTrain + "-" + (i+1) + "-Port4");
+        });
+    }
+
+	function changeData(y){
+        console.log(window.location.href)
+	    console.log(y)
+
+        dataSplit = y.split("-");
+
+        //Cosa si vuole cambiare
+        console.log(dataSplit[2])
+
+        //Nr vagone
+        console.log(dataSplit[1])
+
+        //Nr treno
+        console.log(dataSplit[0])
+
+        if(dataSplit[2] === "Temp"){
+            window.location.href = "https://localhost:44305/ChangeTemp?handler=" + dataSplit[0] + "-" + dataSplit[1]
+        }else if(dataSplit[2].startsWith("Port") || dataSplit[2] === "Toilette"){
+            window.location.href = "https://localhost:44305/ChangePort?handler=" + y
+        }else{
+
+        }
+    }
+
+    //Logout
+    var logoutList = document.getElementsByClassName("logout");
+    logoutList[0].addEventListener("click", function() {
+            window.location.href = "https://localhost:44305/Index?handler=Logout"
+        });
+
+    //Update Page
+    var updateList = document.getElementsByClassName("update");
+    updateList[0].addEventListener("click", function() {
+            window.location.href = "https://localhost:44305/SeeWagon?handler=" + @Model.nrTrain;
+        });
+
+</script>

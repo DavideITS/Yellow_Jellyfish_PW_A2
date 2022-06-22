@@ -106,8 +106,8 @@ namespace TestSendMessageMqtt
                     }
                     else if (countSendMessage == 4)
                     {
-                        json = "{\"nrWagon\":5,\"Temp\":23.3,\"Hum\":60.0,\"Smoke\":true,\"Toilette\":false,\"Port\":[false,true,true,false]}";
-                        countSendMessage = 0;
+                        json = "{\"nrWagon\":5,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
+                        countSendMessage=0;
                     }
 
                     //Creazione del messaggio Mqtt
