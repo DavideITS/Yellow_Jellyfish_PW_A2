@@ -10,11 +10,18 @@
 
 #include <xc.h>
 #define _XTAL_FREQ 16000000
+
 #define TMR_PRE 6
 #define UPD_DELAY 3
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
+
+// Register settings
+
+#define UART_INTCON 0xC0    // Global and peripheral interrupt enabled
+#define UART_PIE1 0x22      //
+
 
 char picId = 0x01;
 int placeHolder = 768;
@@ -34,8 +41,10 @@ void send_byte(char);
 void send_array(char *);
 void timer_handler();
 void com_handler();
+char id_request();
 void init_UART(int);
 void init_Timer();
+void init_ADC();
 
 void main(void) {
     TRISB = 0x00;
@@ -97,9 +106,7 @@ void com_handler()
         char str[] = "prova";
         send_array(str);
     }
-    
-    PORTB = counter;
-    PORTD = seconds % UPD_DELAY;
+
     if(!(seconds % UPD_DELAY) && (boolReg & 0x02))
         counter++;
 
@@ -110,6 +117,25 @@ void com_handler()
 
 }
 
+char id_request()
+{
+    
+}
+
+void init_UART()
+{
+    // Interrupt configuration
+    INTCON |= UART_INTCON;
+    PIE1 |= 0x22;
+    TRISC |= 0x80; // set RC7 to input (RX)
+    TRISC &= !0x40; // RC6 to output (TX)
+
+    TXSTA = 0x24;
+    RCSTA |= 0x90;
+
+    SPBRG = (_XTAL_FREQ/(long)(64UL*BAUDRATE))-1;
+}
+
 void init_Timer()
 {
     INTCON |= 0xA0;
@@ -118,22 +144,13 @@ void init_Timer()
     TMR0 = TMR_PRE;
 }
 
-void init_UART(int baudRate)
-{
-    // Interrupt configuration
-    INTCON |= 0xC0;
-    PIE1 |= 0x22;
-    TRISC |= 0x80; // set RC7 to input (RX)
-    TRISC &= !0x40; // RC6 to output (TX)
-
-    TXSTA = 0x24;
-    RCSTA |= 0x90;
-
-    SPBRG = (_XTAL_FREQ/(long)(64UL*baudRate))-1;
-}
-
 void __interrupt() ISR()
 {
+    if (TXIF)
+    {
+        PORTB = 0xFF;
+    }
+  
     if (RCIF){ // Interrupt RX
         RCIF = 0;
         PORTD = RCREG;
