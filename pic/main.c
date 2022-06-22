@@ -9,9 +9,8 @@
 
 
 #include <xc.h>
-#define _XTAL_FREQ 16000000
+#define _XTAL_FREQ 8000000
 
-#define TMR_PRE 6
 #define UPD_DELAY 3
 #define TRUE 1
 #define FALSE 0
@@ -22,13 +21,17 @@
 #define UART_INTCON 0xC0    // Global and peripheral interrupt enabled
 #define UART_PIE1 0x22      //
 
+typedef struct {
+	unsigned int msTrig : 1;
+}valReg1;
 
 char picId = 0x01;
 int placeHolder = 768;
+
 int millis = 0;
 int seconds = 0;
+
 char dataArray[64];
-char counter = 0x02;
 
 char boolReg = 0;
 /*
@@ -39,24 +42,20 @@ char boolReg = 0;
 
 void send_byte(char);
 void send_array(char *);
-void timer_handler();
-void com_handler();
-char id_request();
-void init_UART(int);
-void init_Timer();
-void init_ADC();
+void timer_handler(void);
+void com_handler(void);
+char id_request(void);
+
+void system_init(void);
+void uart_init(int);
+void timer_init(void);
+void adc_init(void);
 
 void main(void) {
-    TRISB = 0x00;
+
     TRISD = 0x00;
-    TRISE = 0x00;
-    PORTE = 0xFF;
-    init_Timer();
-    init_UART(BAUDRATE);
-    while(1){
-        timer_handler();
-        com_handler();
-    }
+    PORTD = sizeof(valReg1);
+    
 
 }
 
@@ -87,7 +86,7 @@ void send_array(char * array)
 
 void timer_handler()
 {
-    if(boolReg & 0x80)
+    if(valReg1.msTrig)
     {
         if(++millis >= 1000)
         {
@@ -95,7 +94,7 @@ void timer_handler()
             seconds++;
         }
         
-        boolReg &= ~0x80;
+        valReg1.msTrig = 0;
     }
 }
 
@@ -121,8 +120,15 @@ char id_request()
 {
     
 }
+void system_init()
+{
+    INTCONbits.GIE = 1; // Enable global interrupt
+    INTCONbits.PEIE = 1; // Enable peripheral interrupt 
+    timer_init();
+    uart_init(BAUDRATE);
+}
 
-void init_UART()
+void uart_init()
 {
     // Interrupt configuration
     INTCON |= UART_INTCON;
@@ -136,30 +142,31 @@ void init_UART()
     SPBRG = (_XTAL_FREQ/(long)(64UL*BAUDRATE))-1;
 }
 
-void init_Timer()
+void timer_init()
 {
-    INTCON |= 0xA0;
-    OPTION_REG &= ~0x3C;
-    OPTION_REG |= 0x03;
-    TMR0 = TMR_PRE;
+
+    OPTION_REGbits.T0CS = 0;    // Select internal clock
+    OPTION_REGbits.PS1 = 1;     // Prescaler to 1:8
+    TMR0 = 6;                   // Preload
 }
 
 void __interrupt() ISR()
 {
-    if (TXIF)
+    if (PIR1bits.TXIF)  // Interrupt TX
     {
         PORTB = 0xFF;
     }
   
-    if (RCIF){ // Interrupt RX
-        RCIF = 0;
+    if (PIR1bits.RCIF)  // Interrupt RX
+    {
+        PIR1bits.RCIF = 0;
         PORTD = RCREG;
     }
     
-    if (INTCON & 0x04) // Interrupt timer
+    if (INTCONbits.TMR0IF)  // Interrupt timer
     {
-        boolReg |= 0x80;
-        INTCON &= ~0x04;
+        valReg1.msTrig = 1;
+        INTCONbits.TMR0IF = 0;
     }
 
 }
