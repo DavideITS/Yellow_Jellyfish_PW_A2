@@ -1,5 +1,30 @@
 ﻿@page
 @model TrainProjectWorkWebApp.Pages.ChangeTempModel
 @{
-    ViewData["Title"] = "Change Temperature Status";
+    ViewData["Title"] = "Change Temperature Values";
 }
+
+<h1>TrainProjectWork</h1>
+<h3>Change Temperature Values</h3>
+<button type="button" class="logout right">Logout</button>
+<br /><br />
+
+<label class="errorToSee">@Model.ErrorToSee</label>
+<br />
+
+<form method="POST">
+    <table class="center">
+        <tr>
+                    <td>
+                        <label for="newTemp">New Temperature Values:</label>
+                    </td>
+                    <td>
+                        <label asp-for="newTemp">
+                            <input type="number"  id="newTemp" name="newTemp" step="0.10" min=10.00 max=30.00 value=20.00>
+                        </label>
+                    </td>
+                </tr>
+    </table>
+    <br />
+    <input type="submit" value="Submit">
+</form>

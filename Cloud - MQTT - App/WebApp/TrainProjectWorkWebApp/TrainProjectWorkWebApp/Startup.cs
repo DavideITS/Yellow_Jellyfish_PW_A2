@@ -27,7 +27,7 @@ namespace TrainProjectWorkWebApp
 
             services.AddSession(options => {
                 //Tempo per cui salva i dati della sessione
-                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
             services.AddMemoryCache();
             services.AddMvc();

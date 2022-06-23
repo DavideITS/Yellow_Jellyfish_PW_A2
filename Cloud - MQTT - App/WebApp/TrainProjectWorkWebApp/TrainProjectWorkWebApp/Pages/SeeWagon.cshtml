@@ -117,6 +117,10 @@
 
 <script type="text/javascript">
 
+    setTimeout(function(){ 
+	    window.location.href = "https://localhost:44305/SeeWagon?handler=" + @Model.nrTrain
+    }, 300000);
+
     var docSendTempList = document.getElementsByClassName("sendTemp");
     var docSendToiletteList = document.getElementsByClassName("sendToilette");
     var docSendPort1List = document.getElementsByClassName("sendPort1");

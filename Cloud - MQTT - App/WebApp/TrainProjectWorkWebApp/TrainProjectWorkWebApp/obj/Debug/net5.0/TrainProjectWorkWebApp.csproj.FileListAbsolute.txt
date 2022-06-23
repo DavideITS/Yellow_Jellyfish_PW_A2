@@ -58,3 +58,6 @@ C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\Tra
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\obj\Debug\net5.0\Razor\Pages\ChangePort.cshtml.g.cs
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\obj\Debug\net5.0\Razor\Pages\ChangeTemp.cshtml.g.cs
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\obj\Debug\net5.0\Razor\Pages\ConfermDataSend.cshtml.g.cs
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\bin\Debug\net5.0\MQTTnet.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\WebApp\TrainProjectWorkWebApp\TrainProjectWorkWebApp\bin\Debug\net5.0\MQTTnet.Extensions.ManagedClient.dll

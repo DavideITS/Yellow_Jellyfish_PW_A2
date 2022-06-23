@@ -3,3 +3,29 @@
 @{
     ViewData["Title"] = "Change Port Status";
 }
+
+<h1>TrainProjectWork</h1>
+<h3>Change Port: @Model.portName</h3>
+<button type="button" class="logout right">Logout</button>
+<br /><br />
+
+<label class="errorToSee">@Model.ErrorToSee</label>
+<br />
+
+<form method="POST">
+    <table class="center">
+        <tr>
+                    <td>
+                        <label for="portStatus">New Port Status:</label>
+                    </td>
+                    <td>
+                        <label asp-for="portStatus">
+                            <input type="radio" id="portStatus" name="portStatus" value=true checked>Open
+                            <input type="radio" id="portStatus" name="portStatus" value=false>Lock
+                        </label>
+                    </td>
+                </tr>
+    </table>
+    <br />
+    <input type="submit" value="Submit">
+</form>
