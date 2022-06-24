@@ -23,8 +23,9 @@
 
 typedef struct {
 	unsigned int msTrig : 1;
-}valReg1;
+}valReg;
 
+valReg valReg1;
 char picId = 0x01;
 int placeHolder = 768;
 
@@ -52,11 +53,11 @@ void timer_init(void);
 void adc_init(void);
 
 void main(void) {
-
-    TRISD = 0x00;
-    PORTD = sizeof(valReg1);
-    
-
+    system_init();
+    while(1)
+    {
+        send_array('a');
+    }
 }
 
 void send_byte(char byte)
@@ -106,9 +107,6 @@ void com_handler()
         send_array(str);
     }
 
-    if(!(seconds % UPD_DELAY) && (boolReg & 0x02))
-        counter++;
-
     if(!(seconds % UPD_DELAY))
         boolReg &= ~0x02;
     else
@@ -122,24 +120,31 @@ char id_request()
 }
 void system_init()
 {
+    TRISB = 0x00;
+    TRISD = 0x00;
+    PORTD = 0x00;
     INTCONbits.GIE = 1; // Enable global interrupt
     INTCONbits.PEIE = 1; // Enable peripheral interrupt 
-    timer_init();
-    uart_init(BAUDRATE);
+    uart_init(9600);
 }
 
-void uart_init()
+void uart_init(int baudrate)
 {
     // Interrupt configuration
-    INTCON |= UART_INTCON;
-    PIE1 |= 0x22;
-    TRISC |= 0x80; // set RC7 to input (RX)
-    TRISC &= !0x40; // RC6 to output (TX)
+    INTCONbits.TMR0IE = 1;
 
-    TXSTA = 0x24;
-    RCSTA |= 0x90;
+    PIE1bits.TXIE = 1; // Enable TX interrupt
+    PIE1bits.RCIE = 1; // Enable RC interrupt
 
-    SPBRG = (_XTAL_FREQ/(long)(64UL*BAUDRATE))-1;
+    TRISCbits.TRISC7 = 1; // Set RC7 to input (RC)
+    TRISCbits.TRISC6 = 0; // Set RC6 to output (TX)
+
+    RCSTAbits.SPEN = 1; // Enable serial port
+    RCSTAbits.CREN = 1;
+    TXSTAbits.TXEN = 1; // Enable transmission
+
+
+    SPBRG = (_XTAL_FREQ/(long)(64UL*baudrate))-1;
 }
 
 void timer_init()
@@ -154,11 +159,12 @@ void __interrupt() ISR()
 {
     if (PIR1bits.TXIF)  // Interrupt TX
     {
-        PORTB = 0xFF;
+
     }
   
     if (PIR1bits.RCIF)  // Interrupt RX
     {
+        PORTB = 0xF0;
         PIR1bits.RCIF = 0;
         PORTD = RCREG;
     }
