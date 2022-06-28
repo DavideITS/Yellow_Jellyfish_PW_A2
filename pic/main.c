@@ -18,21 +18,10 @@
 
 // Register settings
 
-typedef struct {
-	unsigned int bit0 : 1;
-    unsigned int bit1 : 1;
-    unsigned int bit2 : 1;
-    unsigned int bit3 : 1;
-    unsigned int bit4 : 1;
-    unsigned int bit5 : 1;
-    unsigned int bit6 : 1;
-    unsigned int bit7 : 1;
-}boolReg;
+struct {
+	unsigned int msTrig : 1;
+} valReg1;
 
-boolReg valReg1;
-/*
- * 0 = millis trigger
- */
 char picId = 0x01;
 int placeHolder = 768;
 
@@ -75,7 +64,7 @@ void __interrupt() ISR()
     
     if (INTCONbits.TMR0IF)  // Interrupt timer
     {
-        valReg1.bit0 = 1;
+        valReg1.msTrig = 1;
         INTCONbits.TMR0IF = 0;
     }
 
@@ -96,17 +85,20 @@ void system_init()
 void com_handler()
 {   
     char str[] = "prova";
-    static boolReg comReg;
+    static struct {
+        unsigned int trigger : 1;
+        unsigned int isSending : 1;
+    } comReg;
     
-    if((!(seconds % UPD_DELAY) && comReg.bit0) || comReg.bit1)
+    if((!(seconds % UPD_DELAY) && comReg.trigger) || comReg.isSending)
     {
-        comReg.bit1 = send_array(str);
+        comReg.isSending = send_array(str);
     }
 
     if(!(seconds % UPD_DELAY))
-        comReg.bit0 = FALSE;
+        comReg.trigger = FALSE;
     else
-         comReg.bit0 = TRUE;
+         comReg.trigger = TRUE;
     
 }
 
@@ -179,7 +171,7 @@ void timer_init()
 
 void timer_handler()
 {
-    if(valReg1.bit0)
+    if(valReg1.msTrig)
     {
         if(++millis >= 1000)
         {
@@ -187,7 +179,7 @@ void timer_handler()
             seconds++;
         }
         
-        valReg1.bit0 = 0;
+        valReg1.msTrig = 0;
     }
 }
 
