@@ -56,13 +56,15 @@ void main(void) {
     system_init();
     while(1)
     {
-        send_array('a');
+        char str[] = "prova";
+        send_array(str);
     }
 }
 
 void send_byte(char byte)
 {
-    if(TXIF)
+    if(PIR1bits.TXIF)
+        PORTD = byte;
         TXREG = byte;
 }
 
@@ -70,8 +72,10 @@ void send_array(char * array)
 {
     static char pos = 0;
     boolReg |= 0x01;
-    if(TXIF)
+    
+    if(PIR1bits.TXIF)
     {
+        PORTB = array[pos];
         send_byte(array[pos]);
         // PORTB = array[pos];
         if(array[pos] == '\0')
@@ -123,25 +127,26 @@ void system_init()
     TRISB = 0x00;
     TRISD = 0x00;
     PORTD = 0x00;
-    INTCONbits.GIE = 1; // Enable global interrupt
-    INTCONbits.PEIE = 1; // Enable peripheral interrupt 
+    INTCONbits.GIE = 1;     // Enable global interrupt
+    INTCONbits.PEIE = 1;    // Enable peripheral interrupt 
     uart_init(9600);
 }
 
 void uart_init(int baudrate)
 {
     // Interrupt configuration
-    INTCONbits.TMR0IE = 1;
+    PIE1bits.RCIE = 1;      // Enable RC interrupt
+    
+    TRISCbits.TRISC7 = 1;   // Set RC7 to input (RC)
+    TRISCbits.TRISC6 = 0;   // Set RC6 to output (TX)
 
-    PIE1bits.TXIE = 1; // Enable TX interrupt
-    PIE1bits.RCIE = 1; // Enable RC interrupt
+    RCSTAbits.SPEN = 1;     // Enable serial port
+    RCSTAbits.CREN = 1;     // Enable continuous receive mode
 
-    TRISCbits.TRISC7 = 1; // Set RC7 to input (RC)
-    TRISCbits.TRISC6 = 0; // Set RC6 to output (TX)
-
-    RCSTAbits.SPEN = 1; // Enable serial port
-    RCSTAbits.CREN = 1;
-    TXSTAbits.TXEN = 1; // Enable transmission
+    TXSTAbits.TXEN = 1;     // Enable transmission
+    TXSTAbits.BRGH = 1;     //Enable Hight speed
+    
+   
 
 
     SPBRG = (_XTAL_FREQ/(long)(64UL*baudrate))-1;
@@ -150,6 +155,7 @@ void uart_init(int baudrate)
 void timer_init()
 {
 
+    INTCONbits.TMR0IE = 1;      // Enable TIMER 0 interrupt
     OPTION_REGbits.T0CS = 0;    // Select internal clock
     OPTION_REGbits.PS1 = 1;     // Prescaler to 1:8
     TMR0 = 6;                   // Preload
@@ -157,16 +163,11 @@ void timer_init()
 
 void __interrupt() ISR()
 {
-    if (PIR1bits.TXIF)  // Interrupt TX
-    {
 
-    }
-  
     if (PIR1bits.RCIF)  // Interrupt RX
     {
-        PORTB = 0xF0;
-        PIR1bits.RCIF = 0;
         PORTD = RCREG;
+        PIR1bits.RCIF = 0;
     }
     
     if (INTCONbits.TMR0IF)  // Interrupt timer
