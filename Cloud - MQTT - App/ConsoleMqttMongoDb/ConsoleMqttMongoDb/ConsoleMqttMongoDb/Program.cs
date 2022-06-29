@@ -20,10 +20,12 @@ namespace ConsoleMqttMongoDb
         static string topicToReceive = "trainProjectWork/+/liveData/#";
         //Tempo in secondi tra ogni tentativo di riconnessione
         static int timeMqttReconnect = 5;
-        //Nr di porta di Mqtt
-        static int nPortMqtt = 707;
-        //Stringa Ip del broker Mqtt
-        static string serverMqtt = "localhost";
+        //Numero Porta di Mqtt
+        //static int nPortMqtt = 707;
+        static int nPortMqtt = 1883;
+        //Ip del Server Mqtt
+        //static string serverMqtt = "localhost";
+        static string serverMqtt = "broker.hivemq.com";
 
         #endregion Dichiarazione Variabili
 
