@@ -9,26 +9,27 @@
 
 
 #include <xc.h>
+#include <stdlib.h>
 #define _XTAL_FREQ 8000000
 
 #define UPD_DELAY 3
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
-
+#define DATASIZE 8
 // Register settings
 
 struct {
 	unsigned int msTrig : 1;
 } valReg1;
 
-char picId = 0x01;
-int placeHolder = 768;
+char picId = 0xFF;
+int placeHolder = 0x3E8;
 
 int millis = 0;
 int seconds = 0;
 
-char dataArray[64];
+char dataArray[DATASIZE];
 
 void system_init(void);
 void com_handler(void);
@@ -44,10 +45,15 @@ char send_array(char *);
 void timer_init(void);
 void timer_handler(void);
 
+// ADC functions
+void adc_init(void);
+int read_analog(void);
+
 void main(void) {
     system_init();
     while(1)
     {
+        placeHolder = read_analog();
         timer_handler();
         com_handler();
     }
@@ -79,27 +85,40 @@ void system_init()
     INTCONbits.PEIE = 1;    // Enable peripheral interrupt 
     uart_init(9600);
     timer_init();
+    adc_init();
 }
 
-
 void com_handler()
-{   
-    char str[] = "prova";
+{
     static struct {
         unsigned int trigger : 1;
         unsigned int isSending : 1;
     } comReg;
     
+    dataArray[0] = picId;
+    
     if((!(seconds % UPD_DELAY) && comReg.trigger) || comReg.isSending)
     {
-        comReg.isSending = send_array(str);
+        if(picId)
+        {
+            dataArray[1] = placeHolder >> 8;
+            dataArray[2] = placeHolder;
+            comReg.isSending = send_array(dataArray);
+        } 
+        else
+        {
+            dataArray[2] = placeHolder;
+            dataArray[1] = placeHolder >> 8;
+            dataArray[7] = '\r';
+            comReg.isSending = send_array(dataArray);
+        }
+            
     }
 
     if(!(seconds % UPD_DELAY))
         comReg.trigger = FALSE;
     else
          comReg.trigger = TRUE;
-    
 }
 
 char id_request()
@@ -138,18 +157,20 @@ void send_byte(char byte)
 char send_array(char * array)
 {
     static char pos = 0;
+    static char zeroCount = 0;
     if(PIR1bits.TXIF)
     {
         PORTB = array[pos];
         send_byte(array[pos]);
         // PORTB = array[pos];
-        if(array[pos] == '\0')
+        if(pos < DATASIZE)
+            pos++;
+        else
         {
             pos = 0;
-            return FALSE;
+            return FALSE;         
         }
-        else
-            pos++;
+
         return TRUE;
     }   
 }
@@ -161,8 +182,7 @@ char send_array(char * array)
 void timer_init()
 {
     // Timer is configured to produce an interrupt ever 1ms at 8Mhz
-    
-    
+     
     INTCONbits.TMR0IE = 1;      // Enable TIMER 0 interrupt
     OPTION_REGbits.T0CS = 0;    // Select internal clock
     OPTION_REGbits.PS1 = 1;     // Prescaler to 1:8
@@ -183,3 +203,34 @@ void timer_handler()
     }
 }
 
+
+/*
+ * ADC Functions
+ */
+
+void adc_init()
+{
+    TRISAbits.TRISA0 = 1;
+    ADCON1 = 0x0E; // Set RA0 as analogic input
+
+    ADCON0bits.ADON = 1;    // Enable ADC converter
+    ADCON0bits.ADCS0 = 0;
+    ADCON0bits.ADCS1 = 1;   // 1:32 frequency conversion
+    
+    ADCON0bits.CHS0 = 0;
+    ADCON0bits.CHS1 = 0;
+    ADCON0bits.CHS2 = 0; // Select AN0 (RA0)
+}
+
+int read_analog()
+{
+    static int val = 0;
+
+    if(!ADCON0bits.GO_DONE)
+    {
+        ADCON0bits.GO_DONE = 1;
+        val = ADRESL + (ADRESH << 8);
+    }
+
+    return val;
+}
