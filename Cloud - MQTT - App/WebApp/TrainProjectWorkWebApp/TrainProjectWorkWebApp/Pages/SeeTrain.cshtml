@@ -16,14 +16,14 @@
     <th class="center width10">Nr° Wagon</th>
     <th class="center width10">Conductor</th>
   </tr>
-@for(var i = 0; i < @Model.trainList.Count() ; i++)
+    @for (var i = 0; i < @Model.trainList.Count(); i++)
     {
-        <tr class="center">
+            <tr class="center">
 
-    <td class="openTrain center">@Model.trainList[i]["nrTrain"]</td>
-    <td class="center">@Model.trainList[i]["nrWagon"]</td>
-    <td class="center">@Model.trainList[i]["conductor"]</td>
-    </tr>
+        <td class="openTrain center">@Model.trainList[i]["nrTrain"]</td>
+        <td class="center">@Model.trainList[i]["nrWagon"]</td>
+        <td class="center">@Model.trainList[i]["conductor"]</td>
+        </tr>
     }
 </table>
 
@@ -34,22 +34,40 @@
     console.log(docOpenTrainList.length);
 
     for (let i = 0; i < docOpenTrainList.length; i++) {
-	    var docOpenTrain = docOpenTrainList[i];
+        var docOpenTrain = docOpenTrainList[i];
 
         docOpenTrain.addEventListener("click", function() {
-            window.location.href = "https://localhost:44305/SeeWagon?handler=" + (i+1)
+
+            var windowsLocArr = window.location.href
+            var windowsLoc = windowsLocArr.split('SeeTrain')[0]
+            console.log(windowsLoc)
+
+            window.location.href = windowsLoc + "SeeWagon?handler=" + (i+1)
+            //window.location.href = "https://localhost:44305/SeeWagon?handler=" + (i+1)
         });
     }
 
     //Logout
     var logoutList = document.getElementsByClassName("logout");
     logoutList[0].addEventListener("click", function() {
-            window.location.href = "https://localhost:44305/Index?handler=Logout"
+
+        var windowsLocArr = window.location.href
+            var windowsLoc = windowsLocArr.split('SeeTrain')[0]
+            console.log(windowsLoc)
+
+            window.location.href = windowsLoc + "Index?handler=Logout"
+            //window.location.href = "https://localhost:44305/Index?handler=Logout"
         });
 
         //Update Page
     var updateList = document.getElementsByClassName("update");
     updateList[0].addEventListener("click", function() {
-            window.location.href = "https://localhost:44305/SeeTrain";
+
+        var windowsLocArr = window.location.href
+            var windowsLoc = windowsLocArr.split('SeeTrain')[0]
+            console.log(windowsLoc)
+
+            window.location.href = windowsLoc + "SeeTrain";
+            //window.location.href = "https://localhost:44305/SeeTrain";
         });
 </script>s

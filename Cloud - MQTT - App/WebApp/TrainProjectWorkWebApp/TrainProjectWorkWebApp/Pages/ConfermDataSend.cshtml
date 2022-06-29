@@ -16,12 +16,24 @@
     //Logout
     var logoutList = document.getElementsByClassName("logout");
     logoutList[0].addEventListener("click", function() {
-            window.location.href = "https://localhost:44305/Index?handler=Logout"
+
+        var windowsLocArr = window.location.href
+            var windowsLoc = windowsLocArr.split('ConfermDataSend')[0]
+            console.log(windowsLoc)
+
+            window.location.href = windowsLoc + "Index?handler=Logout"
+            //window.location.href = "https://localhost:44305/Index?handler=Logout"
         });
 
         //Home
     var homeList = document.getElementsByClassName("home");
     homeList[0].addEventListener("click", function() {
-            window.location.href = "https://localhost:44305/Index";
+
+        var windowsLocArr = window.location.href
+            var windowsLoc = windowsLocArr.split('ConfermDataSend')[0]
+            console.log(windowsLoc)
+
+            window.location.href = windowsLoc + "Index"
+            //window.location.href = "https://localhost:44305/Index";
         });
 </script>

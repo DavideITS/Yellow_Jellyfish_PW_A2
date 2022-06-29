@@ -36,9 +36,11 @@ namespace TrainProjectWorkWebApp.Pages
         //Ogni quanti secondi prova a riconnettersi
         static int timeMqttReconnect = 5;
         //Numero Porta di Mqtt
-        static int nPortMqtt = 707;
+        //static int nPortMqtt = 707;
+        static int nPortMqtt = 1883;
         //Ip del Server Mqtt
-        static string serverMqtt = "localhost";
+        //static string serverMqtt = "localhost";
+        static string serverMqtt = "broker.hivemq.com";
         #endregion Dichiarazione Variabili Mqtt
 
         public void OnGet()
@@ -101,7 +103,7 @@ namespace TrainProjectWorkWebApp.Pages
                 objToSend.Add("nrTrain", nrTrain);
                 objToSend.Add("nrWagon", nrWagon);
                 objToSend.Add("change", "Temp");
-                objToSend.Add("newValue", newTemp);
+                objToSend.Add("newValue", newTemp/10);
 
                 //Creazione JObject da Dict
                 var jobjToConvert = JObject.FromObject(objToSend);

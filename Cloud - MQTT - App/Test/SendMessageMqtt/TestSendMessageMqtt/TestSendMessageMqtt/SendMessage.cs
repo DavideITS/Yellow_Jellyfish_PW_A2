@@ -24,8 +24,10 @@ namespace TestSendMessageMqtt
         static int timeMqttReconnect = 5;
         //Numero Porta di Mqtt
         static int nPortMqtt = 707;
+        //static int nPortMqtt = 1883;
         //Ip del Server Mqtt
         static string serverMqtt = "localhost";
+        //static string serverMqtt = "broker.hivemq.com";
         #endregion Dichiarazione Variabili
 
         #region Main
