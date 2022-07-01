@@ -46,7 +46,9 @@ The third level of the Topic set the mode that is in use:
 
 ## JSON-LiveData Message Example
 
-![](..//Img/jsonMqttLiveDataStructure.png)
+![](..//Img/jsonMqttLiveDataStructure1.png)
+
+![](..//Img/jsonMqttLiveDataStructure2.png)
 
 -- --
 
