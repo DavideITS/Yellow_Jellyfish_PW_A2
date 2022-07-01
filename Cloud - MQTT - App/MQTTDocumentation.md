@@ -46,6 +46,16 @@ The third level of the Topic set the mode that is in use:
 
 ## JSON-LiveData Message Example
 
-
-
 ![](..//Img/jsonMqttLiveDataStructure.png)
+
+-- --
+
+## JSON-Command Message Example
+
+The first image is an example for a change of temperature
+
+![](..//Img/jsonMqttCommandStructure1.png)
+
+The second image is for a change of port status(close to open or vice versa)
+
+![](..//Img/jsonMqttCommandStructure2.png)
