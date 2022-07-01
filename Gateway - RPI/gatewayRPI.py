@@ -1,4 +1,3 @@
-from this import d
 import serial
 import redis
 import time
@@ -16,18 +15,23 @@ r = redis.Redis(host='127.0.0.1', port=6379, db=0)
 #broker mqtt
 brokerMQTT="broker.hivemq.com"                          
 portMQTT=1883
-client1= paho.Client("nomeClientPub")                    #create client object
+
+#pubblicazione su MQTT
+client1= paho.Client("TrainProjectWorkPUB")                    #create client object
 client1.username_pw_set("myTestAppPub", "testPassword000")
 def on_publish(client,userdata,result):             #create function for callback
     print("Data published \n")
-    pass
+    pass 
 client1.on_publish = on_publish                    #assign function to callback
+
+
+
 
 def initSerial():
     global ser
     ser.baudrate = 9600
     #ser.port = '/dev/ttyUSB0'
-    ser.port = 'COM5'
+    ser.port = 'COM7'
     #ser.timeout =0
     ser.stopbits = serial.STOPBITS_ONE
     ser.bytesize = 8
@@ -39,19 +43,50 @@ def write_json(strInput):
     Temp = int.from_bytes(strInput[1]+strInput[2], "big") 
     hum = int.from_bytes(strInput[3]+strInput[4], "big") 
     smoke = int.from_bytes(strInput[5]+strInput[6], "big") 
-    ToiletPort = int.from_bytes(strInput[7], "big")
-    ToiletPort = bin(ToiletPort)
+    sDoorStatus = int.from_bytes(strInput[7], "big")
+    sDoorStatus = bin(sDoorStatus)
+    DoorStatus = [0,0,0,0,0]
     
+    if smoke > 900:
+        smoke = True
+    else:
+        smoke = False
+        
+    if sDoorStatus[4+2] == '1':
+        DoorStatus[0] = True
+    else:
+        DoorStatus[0] = False
+        
+    if sDoorStatus[3+2] == '1':
+        DoorStatus[1] = True
+    else:
+        DoorStatus[1] = False
+        
+    if sDoorStatus[2+2] == '1':
+        DoorStatus[2] = True
+    else:
+        DoorStatus[2] = False
+            
+    if sDoorStatus[1+2] == '1':
+        DoorStatus[3] = True
+    else:
+        DoorStatus[3] = False
+    
+    if sDoorStatus[0+2] == '1':
+        DoorStatus[4] = True
+    else:
+        DoorStatus[4] = False
+        
     jsonData = {
     "nrWagon" : nrWagon,
-    "Temp" : Temp,
+    "Temp" : Temp/10,
     "Hum" : hum,
     "Smoke" : smoke,
-    "Port1" : ToiletPort[4+2],
-    "Port2" : ToiletPort[3+2],
-    "Port3" : ToiletPort[2+2],
-    "Port4" : ToiletPort[1+2],
-    "Toilette" : ToiletPort[0+2]
+    "Port1" : DoorStatus[0],
+    "Port2" : DoorStatus[1],
+    "Port3" : DoorStatus[2],
+    "Port4" : DoorStatus[3],
+    "Toilette" : DoorStatus[4]
     }
 
     # convert into JSON:
@@ -83,10 +118,22 @@ def Read(a):
 
 
 def Write(a):
-    while True:
+    #ricezione da MQTT
+    client2= paho.Client("TrainProjectWorkSUB")                    #create client object
+    def on_message(client, userdata, msg):  # The callback for when a PUBLISH message is received from the server.
+        dataPayload = str(msg.payload)  #Da modificare
+        print("Message received-> " + msg.topic + " " + dataPayload)  # Print a received msg
+        encoded = '1'
+        encoded = encoded.encode('utf-8')
+        ser.write(encoded)
+    client2.on_message = on_message                     #assign function to callback
+    client2.connect(brokerMQTT,portMQTT)                     #establish connection
+    client2.subscribe("trainProjectWork/1/command")                  #sub
+    client2.loop_forever()
+    '''while True:
         prova = input("enter a string:")
         encoded = prova.encode('utf-8')
-        ser.write(encoded)
+        ser.write(encoded)'''
         
         
 def RedisInsertElement(testjson):
