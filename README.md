@@ -9,4 +9,4 @@ Team members:
 
         -Davide Viotto <davide.viotto@stud.tecnicosuperiorekennedy.it>
 
-        -Simone Zoppelletto <simone.zoppelletto@studtecnicosuperiorekennedy.it>
+        -Simone Zoppelletto [simone.zoppelletto@stud.tecnicosuperiorekennedy.it](simone.zoppelletto@stud.tecnicosuperiorekennedy.it)
