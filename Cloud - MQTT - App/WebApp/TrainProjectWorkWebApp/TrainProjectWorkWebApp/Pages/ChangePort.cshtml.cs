@@ -27,7 +27,8 @@ namespace TrainProjectWorkWebApp.Pages
         public string ErrorToSee { get; set; }
 
         //nr Train
-        int nrTrain;
+        [BindProperty]
+        public int nrTrain { get; set; }
 
         //nr Wagon
         int nrWagon;
@@ -57,6 +58,9 @@ namespace TrainProjectWorkWebApp.Pages
 
             //Nome della porta selezionata
             portName = inputDataUrl[2];
+
+            //Nr Treno
+            nrTrain = int.Parse(inputDataUrl[0]);
         }
 
         public IActionResult OnPost()

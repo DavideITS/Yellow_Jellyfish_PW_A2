@@ -23,7 +23,8 @@ namespace TrainProjectWorkWebApp.Pages
         public string ErrorToSee { get; set; }
 
         //nr Train
-        int nrTrain;
+        [BindProperty]
+        public int nrTrain { get; set; }
 
         //nr Wagon
         int nrWagon;
@@ -44,7 +45,16 @@ namespace TrainProjectWorkWebApp.Pages
         #endregion Dichiarazione Variabili Mqtt
 
         public void OnGet()
-        {}
+        {
+            //Get dei valori di input
+            string inputDataUrlCompl = this.HttpContext.Request.QueryString.Value.Replace("?handler=", "");
+
+            //Array composto dagli elementi di input
+            string[] inputDataUrl = inputDataUrlCompl.Split("-");
+
+            //Nr Treno
+            nrTrain = int.Parse(inputDataUrl[0]);
+        }
 
         public IActionResult OnPost()
         {
