@@ -46,18 +46,51 @@ The third level of the Topic set the mode that is in use:
 
 ## JSON-LiveData Message Example
 
-![](..//Img/jsonMqttLiveDataStructure1.png)
+                {
+                        "nrWagon" :1,
+                        "Temp" :22.6,
+                        "Hum" :59.0,
+                        "Smoke" :false,
+                        "Toilette" :true,
+                        "Port" :[
+                                false,
+                                false,
+                                false,
+                                false
+                        ]
+                }
 
-![](..//Img/jsonMqttLiveDataStructure2.png)
+                {
+                        "nrWagon" :1,
+                        "Temp" :24,1,
+                        "Hum" :59.0,
+                        "Smoke" :false,
+                        "Toilette" :true,
+                        "Port1" :false,
+                        "Port2" :true,
+                        "Port3" :true,
+                        "Port4" :false,
+                }
 
 -- --
 
 ## JSON-Command Message Example
 
-The first image is an example for a change of temperature
+Example for a change of temperature
 
-![](..//Img/jsonMqttCommandStructure1.png)
+                {
+                        "nrTrain" :1,
+                        "nrWagon" :1,
+                        "change" :"Temp",
+                        "newValue" :20.3
+                }
 
-The second image is for a change of port status(close to open or vice versa)
+Example for a change of port status(close to open or vice versa)
 
-![](..//Img/jsonMqttCommandStructure2.png)
+
+                {
+                        "nrTrain" :1,
+                        "nrWagon" :1,
+                        "change" :"Port1",
+                        "newValue" :true
+                }
