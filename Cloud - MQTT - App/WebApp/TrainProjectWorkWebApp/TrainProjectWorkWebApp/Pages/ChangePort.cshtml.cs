@@ -27,7 +27,8 @@ namespace TrainProjectWorkWebApp.Pages
         public string ErrorToSee { get; set; }
 
         //nr Train
-        int nrTrain;
+        [BindProperty]
+        public int nrTrain { get; set; }
 
         //nr Wagon
         int nrWagon;
@@ -40,9 +41,11 @@ namespace TrainProjectWorkWebApp.Pages
         //Ogni quanti secondi prova a riconnettersi
         static int timeMqttReconnect = 5;
         //Numero Porta di Mqtt
-        static int nPortMqtt = 707;
+        //static int nPortMqtt = 707;
+        static int nPortMqtt = 1883;
         //Ip del Server Mqtt
-        static string serverMqtt = "localhost";
+        //static string serverMqtt = "localhost";
+        static string serverMqtt = "broker.hivemq.com";
         #endregion Dichiarazione Variabili Mqtt
 
         public void OnGet()
@@ -55,6 +58,9 @@ namespace TrainProjectWorkWebApp.Pages
 
             //Nome della porta selezionata
             portName = inputDataUrl[2];
+
+            //Nr Treno
+            nrTrain = int.Parse(inputDataUrl[0]);
         }
 
         public IActionResult OnPost()

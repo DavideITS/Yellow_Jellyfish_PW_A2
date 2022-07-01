@@ -23,7 +23,8 @@ namespace TrainProjectWorkWebApp.Pages
         public string ErrorToSee { get; set; }
 
         //nr Train
-        int nrTrain;
+        [BindProperty]
+        public int nrTrain { get; set; }
 
         //nr Wagon
         int nrWagon;
@@ -36,13 +37,24 @@ namespace TrainProjectWorkWebApp.Pages
         //Ogni quanti secondi prova a riconnettersi
         static int timeMqttReconnect = 5;
         //Numero Porta di Mqtt
-        static int nPortMqtt = 707;
+        //static int nPortMqtt = 707;
+        static int nPortMqtt = 1883;
         //Ip del Server Mqtt
-        static string serverMqtt = "localhost";
+        //static string serverMqtt = "localhost";
+        static string serverMqtt = "broker.hivemq.com";
         #endregion Dichiarazione Variabili Mqtt
 
         public void OnGet()
-        {}
+        {
+            //Get dei valori di input
+            string inputDataUrlCompl = this.HttpContext.Request.QueryString.Value.Replace("?handler=", "");
+
+            //Array composto dagli elementi di input
+            string[] inputDataUrl = inputDataUrlCompl.Split("-");
+
+            //Nr Treno
+            nrTrain = int.Parse(inputDataUrl[0]);
+        }
 
         public IActionResult OnPost()
         {
@@ -101,7 +113,7 @@ namespace TrainProjectWorkWebApp.Pages
                 objToSend.Add("nrTrain", nrTrain);
                 objToSend.Add("nrWagon", nrWagon);
                 objToSend.Add("change", "Temp");
-                objToSend.Add("newValue", newTemp);
+                objToSend.Add("newValue", newTemp/10);
 
                 //Creazione JObject da Dict
                 var jobjToConvert = JObject.FromObject(objToSend);
