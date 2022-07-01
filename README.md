@@ -12,3 +12,4 @@ Team members:
         -Simone Zoppelletto <simone.zoppelletto@stud.tecnicosuperiorekennedy.it>
 
 
+![](Img//StrutturaProgetto.png)
