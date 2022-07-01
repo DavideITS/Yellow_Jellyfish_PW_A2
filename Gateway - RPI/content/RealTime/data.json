@@ -1,0 +1,40 @@
+{
+	"vagone": [
+		{
+			"nrTrain" : 1,
+            "nrWagon" : 1,
+            "Temp" : 1322,
+            "hum" : 67,
+            "smoke" : 1,
+            "Toilet" : 1,
+            "port" : 1 
+		},
+		{
+			"nrTrain" : 12,
+            "nrWagon" : 2,
+            "Temp" : 132,
+            "hum" : 67,
+            "smoke" : 1,
+            "Toilet" : 1,
+            "port" : 1 
+		},
+		{
+			"nrTrain" : 12,
+            "nrWagon" : 3,
+            "Temp" : 132,
+            "hum" : 67,
+            "smoke" : 1,
+            "Toilet" : 1,
+            "port" : 1 
+		},
+		{
+			"nrTrain" : 12,
+            "nrWagon" : 4,
+            "Temp" : 132,
+            "hum" : 67,
+            "smoke" : 1,
+            "Toilet" : 1,
+            "port" : 1 
+		}
+	]
+}

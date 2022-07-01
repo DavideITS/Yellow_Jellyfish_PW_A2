@@ -1,2 +1,4 @@
-pic/build
-pic/dist
+pic/
+*.d
+*.i
+*.cache
