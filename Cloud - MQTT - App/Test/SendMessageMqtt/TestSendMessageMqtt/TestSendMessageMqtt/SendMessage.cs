@@ -13,7 +13,7 @@ namespace TestSendMessageMqtt
     {
         #region Dichiarazione Variabili
         //Topic in cui Pubblicare i messaggi Mqtt
-        static string topicToPublish = "trainProjectWork/1/liveData";
+        static string topicToPublish = "trainProjectWork/1/command";
         static ManualResetEvent MRE = new ManualResetEvent(false);
         //Tempo ogni quanto viene inviato un messaggio
         static int timeToSendMessage = 1000;

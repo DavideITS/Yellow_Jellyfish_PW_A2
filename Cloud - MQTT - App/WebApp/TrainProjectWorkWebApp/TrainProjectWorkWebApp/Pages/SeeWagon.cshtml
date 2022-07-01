@@ -10,106 +10,94 @@
         <label class="center">Train Nr° @Model.nrTrain</label>
         <br /><br />
 
-<table>
+<table class="tableBackColor">
     <tr>
-    <th class="center width10">Nr° Wagon</th>
-    <th>Temperature</th>
-    <th>Humidity</th>
-    <th>Smoke</th>
-    <th class="width10">Toilette</th>
-    <th class="width10">Port 1</th>
-    <th class="width10">Port 2</th>
-    <th class="width10">Port 3</th>
-    <th class="width10">Port 4</th>
-    <th>Date (UTC)</th>
+    <th class="center width10 cursorDefault">Nr° Wagon</th>
+    <th class="center cursorDefault">Temperature</th>
+    <th class="center cursorDefault">Humidity</th>
+    <th class="center cursorDefault">Smoke</th>
+    <th class="width10 center cursorDefault">Toilette</th>
+    <th class="width10 center cursorDefault">Port 1</th>
+    <th class="width10 center cursorDefault">Port 2</th>
+    <th class="width10 center cursorDefault">Port 3</th>
+    <th class="width10 center cursorDefault">Port 4</th>
+    <th class="center cursorDefault">Date (UTC)</th>
   </tr>
 @for(var i = 0; i < @Model.nrWagon ; i++)
     {
         <tr>
 
-    <td class="center">@Model.trainLiveDataFilterList[i]["nrWagon"]
+    <td class="center tableLeft cursorDefault">@Model.trainLiveDataFilterList[i]["nrWagon"]
      </td>
-    <td class="sendTemp center">@Model.trainLiveDataFilterList[i]["Temp"] °C</td>
-    <td class="center">@Model.trainLiveDataFilterList[i]["Hum"]%</td>
+    <td class="sendTemp center tableLeft cursorPointer">@Model.trainLiveDataFilterList[i]["Temp"] °C</td>
+    <td class="center tableLeft cursorDefault">@Model.trainLiveDataFilterList[i]["Hum"]%</td>
     @{bool smoke=bool.Parse(@Model.trainLiveDataFilterList[i]["Smoke"].ToString());}
+                <td class="sendSmoke center tableLeft cursorDefault">
                 @if(smoke == true)
                 {
-                    <td class="sendSmoke center">
                     <img class="tableImg" src="img/true.png" alt="True Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendSmoke center">
-                    <img class="tableImg" src="img/falseDaCambiare.jpg" alt="False Img">
-                    </td>
+                    <img class="tableImg" src="img/false.png" alt="False Img">
                 }
+                </td>
     @{bool toilette=bool.Parse(@Model.trainLiveDataFilterList[i]["Toilette"].ToString());}
+                <td class="sendToilette center tableLeft cursorPointer">
                 @if(toilette == true)
                 {
-                    <td class="sendToilette center">
                     <img class="tableImg" src="img/open.png" alt="Open Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendToilette center">
                     <img class="tableImg" src="img/lock.png" alt="Lock Img">
-                    </td>
                 }
+                </td>
                 @{bool port1=bool.Parse(@Model.trainLiveDataFilterList[i]["Port1"].ToString());}
+                <td class="sendPort1 center tableLeft cursorPointer">
                 @if(port1 == true)
                 {
-                    <td class="sendPort1 center">
                     <img class="tableImg" src="img/open.png" alt="Open Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendPort1 center">
                     <img class="tableImg" src="img/lock.png" alt="Lock Img">
-                    </td>
                 }
+                </td>
                 @{bool port2=bool.Parse(@Model.trainLiveDataFilterList[i]["Port2"].ToString());}
+                <td class="sendPort2 center tableLeft cursorPointer">
                 @if(port2 == true)
                 {
-                    <td class="sendPort2 center">
                     <img class="tableImg" src="img/open.png" alt="Open Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendPort2 center">
                     <img class="tableImg" src="img/lock.png" alt="Lock Img">
-                    </td>
                 }
+                </td>
                 @{bool port3=bool.Parse(@Model.trainLiveDataFilterList[i]["Port3"].ToString());}
+                <td class="sendPort3 center tableLeft cursorPointer">
                 @if(port3 == true)
                 {
-                    <td class="sendPort3 center">
                     <img class="tableImg" src="img/open.png" alt="Open Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendPort3 center">
                     <img class="tableImg" src="img/lock.png" alt="Lock Img">
-                    </td>
                 }
+                </td>
                 @{bool port4=bool.Parse(@Model.trainLiveDataFilterList[i]["Port4"].ToString());}
+                <td class="sendPort4 center tableLeft cursorPointer">
                 @if(port4 == true)
                 {
-                    <td class="sendPort4 center">
                     <img class="tableImg" src="img/open.png" alt="Open Img">
-                    </td>
                 }
                 else
                 {
-                    <td class="sendPort4 center">
                     <img class="tableImg" src="img/lock.png" alt="Lock Img">
-                    </td>
                 }
-    <td>@Model.trainLiveDataFilterList[i]["date"]</td>
+                </td>
+    <td class="center cursorDefault">@Model.trainLiveDataFilterList[i]["date"]</td>
             </tr>
     
     }

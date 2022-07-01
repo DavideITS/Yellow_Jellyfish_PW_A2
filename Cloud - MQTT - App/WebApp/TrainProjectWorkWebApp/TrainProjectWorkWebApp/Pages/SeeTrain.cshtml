@@ -10,19 +10,21 @@
 <button type="button" class="update left">Update</button>
 <br /><br />
 
-<table class="center">
+<table class="center tableBackColor">
     <tr>
-    <th class="center width10">Nr° Train</th>
-    <th class="center width10">Nr° Wagon</th>
-    <th class="center width10">Conductor</th>
+    <th class="center width10 cursorDefault">Nr° Train</th>
+    <th class="center width10 cursorDefault">Nr° Wagon</th>
+    <th class="center width10 cursorDefault">Conductor</th>
   </tr>
     @for (var i = 0; i < @Model.trainList.Count(); i++)
     {
             <tr class="center">
 
-        <td class="openTrain center">@Model.trainList[i]["nrTrain"]</td>
-        <td class="center">@Model.trainList[i]["nrWagon"]</td>
-        <td class="center">@Model.trainList[i]["conductor"]</td>
+        <td class="openTrain tableLeft center"> 
+            <div class="borderTable center cursorPointer">@Model.trainList[i]["nrTrain"]</div>
+        </td>
+        <td class="center tableLeft cursorDefault">@Model.trainList[i]["nrWagon"]</td>
+        <td class="center tableLeft cursorDefault">@Model.trainList[i]["conductor"]</td>
         </tr>
     }
 </table>
