@@ -1,35 +1,35 @@
 #pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
-#pragma config PWRTE = ON       // Power-up Timer Enable bit (PWRT enabled)
+#pragma config PWRTE = ON      // Power-up Timer Enable bit (PWRT enabled)
 #pragma config BOREN = ON       // Brown-out Reset Enable bit (BOR enabled)
 #pragma config LVP = ON         // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
 #pragma config CPD = OFF        // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
 #pragma config WRT = OFF        // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
-
 #include <xc.h>
 #include <stdlib.h>
 #define _XTAL_FREQ 8000000
 
-#define UPD_DELAY 3
+#define UPD_DELAY 2
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
-#define DATASIZE 8
+#define DATASIZE 2
 // Register settings
 
 struct {
-	unsigned int msTrig : 1;
+	unsigned int msTrig : 2;
+    unsigned int isSending : 2;
 } valReg1;
 
-char picId = 0xFF;
+char picId = 23;
 int placeHolder = 0x3E8;
 
 int millis = 0;
 int seconds = 0;
 
-char dataArray[DATASIZE];
+char dataArray[DATASIZE] = {0};
 
 void system_init(void);
 void com_handler(void);
@@ -54,6 +54,8 @@ void main(void) {
     while(1)
     {
         placeHolder = read_analog();
+        PORTD = ADRESL;
+        PORTB = ADRESH;
         timer_handler();
         com_handler();
     }
@@ -62,18 +64,17 @@ void main(void) {
 void __interrupt() ISR()
 {
 
-    if (PIR1bits.RCIF)  // Interrupt RX
+    if (PIR1bits.RCIF)      // Interrupt RX
     {
-        PORTD = RCREG;
+        RCREG = 0x00;
         PIR1bits.RCIF = 0;
     }
     
-    if (INTCONbits.TMR0IF)  // Interrupt timer
+    if (INTCONbits.TMR0IF)     // Interrupt timer
     {
         valReg1.msTrig = 1;
         INTCONbits.TMR0IF = 0;
     }
-
 }
 
 void system_init()
@@ -90,35 +91,20 @@ void system_init()
 
 void com_handler()
 {
-    static struct {
-        unsigned int trigger : 1;
-        unsigned int isSending : 1;
-    } comReg;
+    static char currentState = 0;
+    static char prevState = 0;
     
-    dataArray[0] = picId;
+    currentState = seconds % UPD_DELAY;
     
-    if((!(seconds % UPD_DELAY) && comReg.trigger) || comReg.isSending)
+    if((!(seconds % UPD_DELAY) && prevState) || valReg1.isSending)
     {
-        if(picId)
-        {
-            dataArray[1] = placeHolder >> 8;
-            dataArray[2] = placeHolder;
-            comReg.isSending = send_array(dataArray);
-        } 
-        else
-        {
-            dataArray[2] = placeHolder;
-            dataArray[1] = placeHolder >> 8;
-            dataArray[7] = '\r';
-            comReg.isSending = send_array(dataArray);
-        }
-            
+        dataArray[0] = ADRESH;
+        dataArray[1] = ADRESL;
+        valReg1.isSending = send_array(dataArray);
     }
+    
+    prevState = seconds % UPD_DELAY;
 
-    if(!(seconds % UPD_DELAY))
-        comReg.trigger = FALSE;
-    else
-         comReg.trigger = TRUE;
 }
 
 char id_request()
@@ -144,7 +130,7 @@ void uart_init(int baudrate)
     TXSTAbits.TXEN = 1;     // Enable transmission
     TXSTAbits.BRGH = 1;     //Enable Hight speed
 
-    SPBRG = (_XTAL_FREQ/(long)(64UL*baudrate))-1;
+    SPBRG = (_XTAL_FREQ/(long)(16UL*baudrate))-1;
 }
 
 void send_byte(char byte)
@@ -157,16 +143,14 @@ void send_byte(char byte)
 char send_array(char * array)
 {
     static char pos = 0;
-    static char zeroCount = 0;
     if(PIR1bits.TXIF)
     {
-        PORTB = array[pos];
         send_byte(array[pos]);
-        // PORTB = array[pos];
-        if(pos < DATASIZE)
+        if(pos < DATASIZE - 1)
             pos++;
         else
         {
+            PORTD = 0xF0;
             pos = 0;
             return FALSE;         
         }
@@ -203,7 +187,6 @@ void timer_handler()
     }
 }
 
-
 /*
  * ADC Functions
  */
@@ -212,7 +195,7 @@ void adc_init()
 {
     TRISAbits.TRISA0 = 1;
     ADCON1 = 0x0E; // Set RA0 as analogic input
-
+    ADCON1bits.ADFM = 1; // Right justified
     ADCON0bits.ADON = 1;    // Enable ADC converter
     ADCON0bits.ADCS0 = 0;
     ADCON0bits.ADCS1 = 1;   // 1:32 frequency conversion
@@ -233,4 +216,13 @@ int read_analog()
     }
 
     return val;
+}
+
+/*
+ * LCD functions
+ */
+
+void lcd_init()
+{
+    
 }
