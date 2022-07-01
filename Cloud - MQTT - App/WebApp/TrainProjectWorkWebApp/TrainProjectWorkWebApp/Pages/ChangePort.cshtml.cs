@@ -8,6 +8,7 @@ using MQTTnet.Extensions.ManagedClient;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace TrainProjectWorkWebApp.Pages
 {
@@ -147,7 +148,7 @@ namespace TrainProjectWorkWebApp.Pages
                     //Publish del messaggio nel Broker Mqtt
                     _mqttClient.PublishAsync(message).GetAwaiter().GetResult();
 
-                    _mqttClient.StopAsync();
+                    //_mqttClient.StopAsync();
 
                     return RedirectToPage("ConfermDataSend");
                 }

@@ -16,7 +16,7 @@ namespace TrainProjectWorkWebApp.Pages
 
         //Nuovo valore della temperatura da inviare
         [BindProperty]
-        public double newTemp { get; set; }
+        public int newTemp { get; set; }
 
         //Errori da mostrare sulla pagina
         [BindProperty]
@@ -116,7 +116,7 @@ namespace TrainProjectWorkWebApp.Pages
                     objToSend.Add("nrTrain", nrTrain);
                     objToSend.Add("nrWagon", nrWagon);
                     objToSend.Add("change", "Temp");
-                    objToSend.Add("newValue", newTemp / 10);
+                    objToSend.Add("newValue", newTemp);
 
                     //Creazione JObject da Dict
                     var jobjToConvert = JObject.FromObject(objToSend);
@@ -137,7 +137,7 @@ namespace TrainProjectWorkWebApp.Pages
                     //Publish del messaggio nel Broker Mqtt
                     _mqttClient.PublishAsync(message).GetAwaiter().GetResult();
 
-                    _mqttClient.StopAsync();
+                    //_mqttClient.StopAsync();
 
                     return RedirectToPage("ConfermDataSend");
                 }
