@@ -90,98 +90,106 @@ namespace TrainProjectWorkWebApp.Pages
 
         public IActionResult OnPost()
         {
-            #region MongoDb User List
-
-            //Lista degli utenti presa da MongoDb
-            userList = MongoDb.Client
-                    .GetDatabase("trainProjectWork")
-                    .GetCollection<Dictionary<string, object>>("Users")
-                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
-                   .ToList();
-
-            #endregion MongoDb User List
-
-            //Se ci sono elementi nella lista degli utenti
-            if (userList.Count > 0)
+            try
             {
-                //Cerca un'associazione utente/password con quelle inserite
-                var searchUser = userList.Where(s => s["nick"].ToString().Equals(Username) && s["password"].ToString().Equals(Password));
-                //Se viene trovata un'associazione
-                if (searchUser.Count() > 0)
+                #region MongoDb User List
+
+                //Lista degli utenti presa da MongoDb
+                userList = MongoDb.Client
+                        .GetDatabase("trainProjectWork")
+                        .GetCollection<Dictionary<string, object>>("Users")
+                       .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                       .ToList();
+
+                #endregion MongoDb User List
+
+                //Se ci sono elementi nella lista degli utenti
+                if (userList.Count > 0)
                 {
-                    //Estrae il ruolo dell'utente
-                    string role = searchUser.Select(s => new string(s["role"].ToString())).FirstOrDefault();
-
-                    //Controlla se viene trovato il suo ruolo
-                    if(role != null)
+                    //Cerca un'associazione utente/password con quelle inserite
+                    var searchUser = userList.Where(s => s["nick"].ToString().Equals(Username) && s["password"].ToString().Equals(Password));
+                    //Se viene trovata un'associazione
+                    if (searchUser.Count() > 0)
                     {
-                        //Se il ruolo è admin o capostazione
-                        if (role.ToLower().Equals("admin") || role.ToLower().Equals("stationmaster"))
+                        //Estrae il ruolo dell'utente
+                        string role = searchUser.Select(s => new string(s["role"].ToString())).FirstOrDefault();
+
+                        //Controlla se viene trovato il suo ruolo
+                        if (role != null)
                         {
-                            //Salva il ruolo ed il nr del treno sulla Sessione
-                            HttpContext.Session.SetString("role", role);
-
-                            //Redirect su Seetrain
-                            return RedirectToPage("SeeTrain");
-                        }
-                        else
-                        {
-                            #region MongoDb Train List
-
-                            //Lista dei Treni, usata per controllare a quale treno è associato l'utente
-                            List<Dictionary<string, object>> trainList = new List<Dictionary<string, object>>();
-
-                            //Lista dei treni presa da MongoDb
-                            trainList = MongoDb.Client
-                                    .GetDatabase("trainProjectWork")
-                                    .GetCollection<Dictionary<string, object>>("Trains")
-                                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
-                                   .ToList();
-
-                            #endregion MongoDb Train List
-
-                            //Controllo se ci sono elementi nella lista
-                            if (trainList.Count() > 0)
+                            //Se il ruolo è admin o capostazione
+                            if (role.ToLower().Equals("admin") || role.ToLower().Equals("stationmaster"))
                             {
-                                //Estraggo il nr del treno con lui come conducente
-                                int nrTrain = trainList.Where(s => s["conductor"].ToString().Equals(Username)).Select(s => int.Parse(s["nrTrain"].ToString())).FirstOrDefault();
-                                //Se non c'è nessun treno associato, il valore di nrTrain è 0
-                                if(nrTrain == 0)
-                                {
-                                    ErrorToSee = "No trains found for your account";
-                                    return Page();
-                                }
                                 //Salva il ruolo ed il nr del treno sulla Sessione
                                 HttpContext.Session.SetString("role", role);
-                                HttpContext.Session.SetString("nrTrain", nrTrain.ToString());
-                                //Conversione del nr del treno per usarlo come dato
-                                string nrTrainToPass = nrTrain.ToString();
-                                return RedirectToPage("SeeWagon", nrTrainToPass);
+
+                                //Redirect su Seetrain
+                                return RedirectToPage("SeeTrain");
                             }
                             else
                             {
-                                //Errore di connessione con MongoDb
-                                ErrorToSee = "Error connecting with MongoDb";
-                                return Page();
+                                #region MongoDb Train List
+
+                                //Lista dei Treni, usata per controllare a quale treno è associato l'utente
+                                List<Dictionary<string, object>> trainList = new List<Dictionary<string, object>>();
+
+                                //Lista dei treni presa da MongoDb
+                                trainList = MongoDb.Client
+                                        .GetDatabase("trainProjectWork")
+                                        .GetCollection<Dictionary<string, object>>("Trains")
+                                       .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                                       .ToList();
+
+                                #endregion MongoDb Train List
+
+                                //Controllo se ci sono elementi nella lista
+                                if (trainList.Count() > 0)
+                                {
+                                    //Estraggo il nr del treno con lui come conducente
+                                    int nrTrain = trainList.Where(s => s["conductor"].ToString().Equals(Username)).Select(s => int.Parse(s["nrTrain"].ToString())).FirstOrDefault();
+                                    //Se non c'è nessun treno associato, il valore di nrTrain è 0
+                                    if (nrTrain == 0)
+                                    {
+                                        ErrorToSee = "No trains found for your account";
+                                        return Page();
+                                    }
+                                    //Salva il ruolo ed il nr del treno sulla Sessione
+                                    HttpContext.Session.SetString("role", role);
+                                    HttpContext.Session.SetString("nrTrain", nrTrain.ToString());
+                                    //Conversione del nr del treno per usarlo come dato
+                                    string nrTrainToPass = nrTrain.ToString();
+                                    return RedirectToPage("SeeWagon", nrTrainToPass);
+                                }
+                                else
+                                {
+                                    //Errore di connessione con MongoDb
+                                    ErrorToSee = "Error connecting with MongoDb";
+                                    return Page();
+                                }
                             }
                         }
+                    }
+                    else
+                    {
+                        //Utente e Password Errati
+                        ErrorToSee = "Wrong User and Password";
+                        return Page();
                     }
                 }
                 else
                 {
-                    //Utente e Password Errati
-                    ErrorToSee = "Wrong User and Password";
+                    //Errore di connessione con MongoDb
+                    ErrorToSee = "Error connecting with MongoDb";
                     return Page();
                 }
-            }
-            else
-            {
-                //Errore di connessione con MongoDb
-                ErrorToSee = "Error connecting with MongoDb";
+                //Sennò mostra la pagin di Login
                 return Page();
             }
-            //Sennò mostra la pagin di Login
-            return Page();
+            catch (Exception err)
+            {
+                ErrorToSee = "Error with MongoDb Connection";
+                return Page();
+            }
         }
     }
 }

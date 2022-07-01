@@ -83,67 +83,76 @@ namespace TrainProjectWorkWebApp.Pages
             _mqttClient.DisconnectedHandler = new MqttClientDisconnectedHandlerDelegate(OnDisconnected);
             _mqttClient.ConnectingFailedHandler = new ConnectingFailedHandlerDelegate(OnConnectingFailed);
 
-            // Starts a connection with the Broker
-            _mqttClient.StartAsync(options).GetAwaiter().GetResult();
             #endregion Opzioni Client MQTT
 
-            while (_mqttClient.IsConnected == false) { }
-
-            #region Per mandare messaggi Mqtt
-
-            if (_mqttClient.IsConnected)
+            try
             {
-                #region Creazione Json String
-                //Get dei valori di input
-                string inputDataUrlCompl = this.HttpContext.Request.QueryString.Value.Replace("?handler=", "");
+                // Starts a connection with the Broker
+                _mqttClient.StartAsync(options).GetAwaiter().GetResult();
 
-                //Array composto dagli elementi di input
-                string[] inputDataUrl = inputDataUrlCompl.Split("-");
+                while (_mqttClient.IsConnected == false) { }
 
-                //Nr del treno
-                nrTrain = int.Parse(inputDataUrl[0]);
+                #region Per mandare messaggi Mqtt
 
-                //Nr del vagone
-                nrWagon = int.Parse(inputDataUrl[1]);
+                if (_mqttClient.IsConnected)
+                {
+                    #region Creazione Json String
+                    //Get dei valori di input
+                    string inputDataUrlCompl = this.HttpContext.Request.QueryString.Value.Replace("?handler=", "");
 
-                //Creazione dict da trasformare in json
-                Dictionary<string, object> objToSend = new Dictionary<string, object>();
+                    //Array composto dagli elementi di input
+                    string[] inputDataUrl = inputDataUrlCompl.Split("-");
 
-                //Agg. elementi
-                objToSend.Add("nrTrain", nrTrain);
-                objToSend.Add("nrWagon", nrWagon);
-                objToSend.Add("change", "Temp");
-                objToSend.Add("newValue", newTemp/10);
+                    //Nr del treno
+                    nrTrain = int.Parse(inputDataUrl[0]);
 
-                //Creazione JObject da Dict
-                var jobjToConvert = JObject.FromObject(objToSend);
-                //Conversione da JObject a Json String
-                string jsonStringToSend = jobjToConvert.ToString().Replace("\r\n", "");
-                #endregion Creazione Json String
+                    //Nr del vagone
+                    nrWagon = int.Parse(inputDataUrl[1]);
 
-                string topicToPublish = $"trainProjectWork/{nrTrain}/command";
+                    //Creazione dict da trasformare in json
+                    Dictionary<string, object> objToSend = new Dictionary<string, object>();
 
-                //Creazione del messaggio Mqtt
-                var message = new MqttApplicationMessageBuilder()
-                   .WithTopic(topicToPublish)
-                   .WithPayload(jsonStringToSend)
-                   .WithAtMostOnceQoS()
-                   .WithRetainFlag(true)
-                   .Build();
+                    //Agg. elementi
+                    objToSend.Add("nrTrain", nrTrain);
+                    objToSend.Add("nrWagon", nrWagon);
+                    objToSend.Add("change", "Temp");
+                    objToSend.Add("newValue", newTemp / 10);
 
-                //Publish del messaggio nel Broker Mqtt
-                _mqttClient.PublishAsync(message).GetAwaiter().GetResult();
+                    //Creazione JObject da Dict
+                    var jobjToConvert = JObject.FromObject(objToSend);
+                    //Conversione da JObject a Json String
+                    string jsonStringToSend = jobjToConvert.ToString().Replace("\r\n", "");
+                    #endregion Creazione Json String
 
-                _mqttClient.StopAsync();
+                    string topicToPublish = $"trainProjectWork/{nrTrain}/command";
 
-                return RedirectToPage("ConfermDataSend");
+                    //Creazione del messaggio Mqtt
+                    var message = new MqttApplicationMessageBuilder()
+                       .WithTopic(topicToPublish)
+                       .WithPayload(jsonStringToSend)
+                       .WithAtMostOnceQoS()
+                       .WithRetainFlag(true)
+                       .Build();
+
+                    //Publish del messaggio nel Broker Mqtt
+                    _mqttClient.PublishAsync(message).GetAwaiter().GetResult();
+
+                    _mqttClient.StopAsync();
+
+                    return RedirectToPage("ConfermDataSend");
+                }
+                else
+                {
+                    ErrorToSee = "No Connection with Mqtt Broker";
+                    return Page();
+                }
+                #endregion Per mandare messaggi Mqtt
             }
-            else
+            catch (Exception err)
             {
-                ErrorToSee = "No Connection with Mqtt Broker";
+                ErrorToSee = "Error with Mqtt Pub";
                 return Page();
             }
-            #endregion Per mandare messaggi Mqtt
         }
 
         #region Metodi usati per la connessione con MQTT

@@ -11,21 +11,34 @@ namespace TrainProjectWorkWebApp.Pages
         [BindProperty]
         public List<Dictionary<string, object>> trainList { get; set; }
 
+        //Errori da mostrare sulla pagina
+        [BindProperty]
+        public string ErrorToSee { get; set; }
+
         public void OnGet()
         {
-            #region MongoDb Train List
+            try
+            {
+                #region MongoDb Train List
 
-            trainList = new List<Dictionary<string,object>>();
+                trainList = new List<Dictionary<string, object>>();
 
-            //Lista dei treni presa da MongoDb
-            trainList = MongoDb.Client
-                    .GetDatabase("trainProjectWork")
-                    .GetCollection<Dictionary<string, object>>("Trains")
-                   .Find(Builders<Dictionary<string, object>>.Filter.Empty)
-                   .ToList();
+                //Lista dei treni presa da MongoDb
+                trainList = MongoDb.Client
+                        .GetDatabase("trainProjectWork")
+                        .GetCollection<Dictionary<string, object>>("Trains")
+                       .Find(Builders<Dictionary<string, object>>.Filter.Empty)
+                       .ToList();
 
-            #endregion MongoDb Train List
+                #endregion MongoDb Train List
+            }
+            catch (System.Exception err)
+            {
+                ErrorToSee = "Error with MongoDb Connection";
+                //Errori da mostrare sulla pagina
 
+                trainList = new List<Dictionary<string, object>>();
+            }
         }
     }
 }
