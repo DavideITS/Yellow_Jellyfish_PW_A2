@@ -13,7 +13,8 @@ namespace TestSendMessageMqtt
     {
         #region Dichiarazione Variabili
         //Topic in cui Pubblicare i messaggi Mqtt
-        static string topicToPublish = "trainProjectWork/1/command";
+        static string topicToPublish = "trainProjectWork/1/liveData";
+        //static string topicToPublish = "trainProjectWork/1/command";
         static ManualResetEvent MRE = new ManualResetEvent(false);
         //Tempo ogni quanto viene inviato un messaggio
         static int timeToSendMessage = 1000;
@@ -88,37 +89,37 @@ namespace TestSendMessageMqtt
                     string json = "";
                     if(countSendMessage == 0)
                     {
-                        json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port1\",\"newValue\":true}";
+                        //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port1\",\"newValue\":true}";
 
-                        //json = "{\"nrWagon\":1,\"Temp\":21.9,\"Hum\":59.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,false,false]}";
+                        json = "{\"nrWagon\":1,\"Temp\":21.9,\"Hum\":59.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,false,false]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 1)
                     {
-                        json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port2\",\"newValue\":false}";
+                        //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port2\",\"newValue\":false}";
 
-                        //json = "{\"nrWagon\":2,\"Temp\":23.1,\"Hum\":55.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,true,false]}";
+                        json = "{\"nrWagon\":2,\"Temp\":23.1,\"Hum\":55.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,true,false]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 2)
                     {
-                        json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port3\",\"newValue\":false}";
+                        //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port3\",\"newValue\":false}";
 
-                        //json = "{\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[false,true,true,false]}";
+                        json = "{\"nrWagon\":3,\"Temp\":23.3,\"Hum\":61.5,\"Smoke\":true,\"Toilette\":false,\"Port\":[false,true,true,false]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 3)
                     {
-                        json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port4\",\"newValue\":true}";
+                        //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port4\",\"newValue\":true}";
 
-                        //json = "{\"nrWagon\":4,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
+                        json = "{\"nrWagon\":4,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 4)
                     {
-                        json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Temp\",\"newValue\":23}";
+                        //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Temp\",\"newValue\":23}";
 
-                        //json = "{\"nrWagon\":5,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
+                        json = "{\"nrWagon\":5,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
                         countSendMessage = 0;
                     }
 

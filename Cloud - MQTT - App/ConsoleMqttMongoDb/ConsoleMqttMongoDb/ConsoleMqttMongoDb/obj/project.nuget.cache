@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "6luWU6zCN70/fT+RA+6ykzD615BUancd4/IL89d5gTBFRHtjN3YCGl8tANBpyMDGDpSKueZ9IpP+VDtpF2CvXw==",
+  "dgSpecHash": "3qejocBhCknGeU3p3GYKCJfo5ILAXMOpxIJ5mQiRL3udBsrZvmlGTHG4TabSzK17SMZ+OFBSp2D4/5+tPC04tw==",
   "success": true,
   "projectFilePath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\ConsoleMqttMongoDb\\ConsoleMqttMongoDb\\ConsoleMqttMongoDb\\ConsoleMqttMongoDb.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\dnsclient\\1.6.0\\dnsclient.1.6.0.nupkg.sha512",
+    "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\google.protobuf\\3.21.2\\google.protobuf.3.21.2.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\mongodb.bson\\2.16.0\\mongodb.bson.2.16.0.nupkg.sha512",
@@ -18,7 +19,8 @@
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
-    "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512"
+    "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
+    "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\telegram.bot\\18.0.0\\telegram.bot.18.0.0.nupkg.sha512"
   ],
   "logs": []
 }

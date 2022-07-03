@@ -34,3 +34,5 @@ C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqt
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqttMongoDb\ConsoleMqttMongoDb\ConsoleMqttMongoDb\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqttMongoDb\ConsoleMqttMongoDb\ConsoleMqttMongoDb\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
 C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqttMongoDb\ConsoleMqttMongoDb\ConsoleMqttMongoDb\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqttMongoDb\ConsoleMqttMongoDb\ConsoleMqttMongoDb\bin\Debug\net5.0\Telegram.Bot.dll
+C:\DIQU\Anno 2\Project Work\Yellow_Jellyfish_PW_A2\Cloud - MQTT - App\ConsoleMqttMongoDb\ConsoleMqttMongoDb\ConsoleMqttMongoDb\bin\Debug\net5.0\Google.Protobuf.dll

@@ -7,6 +7,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot;
 
 namespace ConsoleMqttMongoDb
 {
@@ -98,6 +99,12 @@ namespace ConsoleMqttMongoDb
                                 if (bool.TryParse(jsonElement.Value.ToString(), out resultBoolConvert))
                                 {
                                     objToInsert.Add(jsonElement.Key, resultBoolConvert);
+                                    if(jsonElement.Key.ToString().ToLower().Equals("smoke") && resultBoolConvert == true)
+                                    {
+                                        var telegramBot = new TelegramBotClient("5513414500:AAEsclqcHI1dNien8pfrNqY5-PZFzmZ0NI8");
+                                        string messageTelegramBot = $"Gas was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
+                                        telegramBot.SendTextMessageAsync("-592882855", messageTelegramBot);
+                                    }
                                 }
                                 else
                                 {
