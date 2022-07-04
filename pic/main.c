@@ -11,16 +11,17 @@
 #include <stdlib.h>
 #define _XTAL_FREQ 8000000
 
-#define UPD_DELAY 2
+#define UPD_DELAY 5
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
-#define DATASIZE 2
+#define DATASIZE 3
 // Register settings
 
 struct {
 	unsigned int msTrig : 2;
-    unsigned int isSending : 2;
+    unsigned int pendingSend : 2;
+    unsigned int isRecieving : 2;
 } valReg1;
 
 char picId = 23;
@@ -30,6 +31,8 @@ int millis = 0;
 int seconds = 0;
 
 char dataArray[DATASIZE] = {0};
+char lastSentByte;
+char recievedByte;
 
 void system_init(void);
 void com_handler(void);
@@ -54,8 +57,6 @@ void main(void) {
     while(1)
     {
         placeHolder = read_analog();
-        PORTD = ADRESL;
-        PORTB = ADRESH;
         timer_handler();
         com_handler();
     }
@@ -66,7 +67,8 @@ void __interrupt() ISR()
 
     if (PIR1bits.RCIF)      // Interrupt RX
     {
-        RCREG = 0x00;
+        valReg1.isRecieving = 1;
+        recievedByte = RCREG;
         PIR1bits.RCIF = 0;
     }
     
@@ -93,17 +95,45 @@ void com_handler()
 {
     static char currentState = 0;
     static char prevState = 0;
-    
+
     currentState = seconds % UPD_DELAY;
-    
-    if((!(seconds % UPD_DELAY) && prevState) || valReg1.isSending)
+
+    if((!currentState && prevState) || valReg1.pendingSend)
     {
-        dataArray[0] = ADRESH;
-        dataArray[1] = ADRESL;
-        valReg1.isSending = send_array(dataArray);
+        if(valReg1.isRecieving)
+        {
+            valReg1.pendingSend = TRUE;
+        }
+        else
+        {
+            dataArray[0] = recievedByte;
+            dataArray[1] = lastSentByte;
+            dataArray[2] = ADRESL;
+            valReg1.pendingSend = send_array(dataArray);
+        }
     }
-    
+ 
+
+    if(valReg1.isRecieving && !(recievedByte == lastSentByte))
+    {
+        //PORTD = recievedByte;
+        //PORTB = lastSentByte;
+        static char recievedArray[4];
+        static char pos;
+        if(recievedByte == picId)
+        {
+            PORTD = recievedByte;
+        }
+        else
+        {
+            PORTB = 0x23;
+        }
+        
+        
+    }
+    valReg1.isRecieving = FALSE;
     prevState = seconds % UPD_DELAY;
+    
 
 }
 
@@ -136,8 +166,11 @@ void uart_init(int baudrate)
 void send_byte(char byte)
 {
     if(PIR1bits.TXIF)
-        PORTD = byte;
-        TXREG = byte;
+    {
+        TXREG = byte;     
+        lastSentByte = byte;
+    }
+
 }
 
 char send_array(char * array)
@@ -150,9 +183,8 @@ char send_array(char * array)
             pos++;
         else
         {
-            PORTD = 0xF0;
             pos = 0;
-            return FALSE;         
+            return FALSE;
         }
 
         return TRUE;
