@@ -32,13 +32,16 @@
 
 <script type="text/javascript">
 
+    //Lista presa dalla colonna dei nr dei treni
     var docOpenTrainList = document.getElementsByClassName("openTrain");
 
     console.log(docOpenTrainList.length);
 
+    //Per oigni elemento della lista
     for (let i = 0; i < docOpenTrainList.length; i++) {
         var docOpenTrain = docOpenTrainList[i];
 
+        //Aggiunta del metodo che reindirizza in base al nr di treno schiacciato
         docOpenTrain.addEventListener("click", function() {
 
             var windowsLocArr = window.location.href
@@ -46,7 +49,6 @@
             console.log(windowsLoc)
 
             window.location.href = windowsLoc + "SeeWagon?handler=" + (i+1)
-            //window.location.href = "https://localhost:44305/SeeWagon?handler=" + (i+1)
         });
     }
 

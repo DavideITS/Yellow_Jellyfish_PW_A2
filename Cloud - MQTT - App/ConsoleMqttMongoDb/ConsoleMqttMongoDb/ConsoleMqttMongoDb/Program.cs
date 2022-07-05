@@ -15,6 +15,8 @@ namespace ConsoleMqttMongoDb
     {
         #region Dichiarazione Variabili
 
+        #region MQTT
+
         //Client Mqtt
         static IManagedMqttClient _mqttClient;
         //Topic nel quale ricevere i messaggi
@@ -28,7 +30,11 @@ namespace ConsoleMqttMongoDb
         //static string serverMqtt = "localhost";
         static string serverMqtt = "broker.hivemq.com";
 
+        #endregion MQTT
+
         #endregion Dichiarazione Variabili
+
+        #region Main
 
         static void Main(string[] args)
         {
@@ -66,8 +72,10 @@ namespace ConsoleMqttMongoDb
             //Console.WriteLine(_mqttClient.IsConnected);
 
             #region Quando vengono ricevuti messaggi da MQTT
+
             _mqttClient.UseApplicationMessageReceivedHandler(e =>
             {
+                //Se il contenuto del messaggio non è null
                 if(e.ApplicationMessage.Payload != null)
                 {
                     //Estrazione Messaggio ricevuto
@@ -75,6 +83,9 @@ namespace ConsoleMqttMongoDb
 
                     try
                     {
+
+                        #region Estrazione Json e dati necessari
+
                         //Convert da Stringa Json a Json
                         JObject json = JObject.Parse(data);
                         //Estrazione topic
@@ -82,10 +93,16 @@ namespace ConsoleMqttMongoDb
                         //Split del topic tramite "/"
                         string[] topicSplit = topic.Split("/");
 
+                        #endregion Estrazione Json e dati necessari
+
                         Console.WriteLine($"\n[{DateTime.Now}] Message received in Topic: {topic}\nData: {data}");
 
+                        //Oggetto che verrà usato per creare il json da inserire su mongodb
                         Dictionary<string, object> objToInsert = new Dictionary<string, object>();
 
+                        #region Aggiunta dati in objToInsert
+
+                        //Aggiunta data e nr treno (ricavato dal topic di ricezione del messaggio)
                         objToInsert.Add("date", DateTime.Now);
                         objToInsert.Add("nrTrain", int.Parse(topicSplit[1].ToString()));
 
@@ -99,11 +116,13 @@ namespace ConsoleMqttMongoDb
                                 if (bool.TryParse(jsonElement.Value.ToString(), out resultBoolConvert))
                                 {
                                     objToInsert.Add(jsonElement.Key, resultBoolConvert);
-                                    if(jsonElement.Key.ToString().ToLower().Equals("smoke") && resultBoolConvert == true)
+
+                                    //Controllo sensore del fumo
+                                    if (jsonElement.Key.ToString().ToLower().Equals("smoke") && resultBoolConvert == true)
                                     {
-                                        var telegramBot = new TelegramBotClient("5513414500:AAEsclqcHI1dNien8pfrNqY5-PZFzmZ0NI8");
+                                        //Se il sensore del fumo è attivo viene mandata una notifica su telegram
                                         string messageTelegramBot = $"Gas was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
-                                        telegramBot.SendTextMessageAsync("-592882855", messageTelegramBot);
+                                        sendTelegram(messageTelegramBot);
                                     }
                                 }
                                 else
@@ -112,6 +131,22 @@ namespace ConsoleMqttMongoDb
                                     if (double.TryParse(jsonElement.Value.ToString(), out resultFloatConvert))
                                     {
                                         objToInsert.Add(jsonElement.Key, resultFloatConvert);
+
+                                        //Controllo valore Temperatura
+                                        if (jsonElement.Key.ToString().ToLower().Equals("temp") && resultFloatConvert > 30)
+                                        {
+                                            //Se la temperatura supera i 30°C viene mandata una notifica su telegram
+                                            string messageTelegramBot = $"Excessive temperature of {resultFloatConvert} °C  was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
+                                            sendTelegram(messageTelegramBot);
+                                        }
+
+                                        //Controllo valore Umidità
+                                        if (jsonElement.Key.ToString().ToLower().Equals("hum") && resultFloatConvert > 80)
+                                        {
+                                            //Se l'umidità supera l' 80% viene mandata una notifica su telegram
+                                            string messageTelegramBot = $"Excessive humidity of {resultFloatConvert}% was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
+                                            sendTelegram(messageTelegramBot);
+                                        }
                                     }
                                     else
                                     {
@@ -139,6 +174,9 @@ namespace ConsoleMqttMongoDb
                             }
 
                         }
+
+                        #endregion Aggiunta dati in objToInsert
+
                         //Dict finito, ora lo devo inserire nel db
                         MongoDb.Client.GetDatabase("trainProjectWork").GetCollection<Dictionary<string, object>>("TrainLiveData").InsertOne(objToInsert);
 
@@ -155,25 +193,45 @@ namespace ConsoleMqttMongoDb
             Console.ReadKey();
         }
 
+        #endregion Main
+
         #region Metodi usati per la connessione con MQTT
 
+        //Connessione Avvenuta correttamente su MQTT
         public static void OnConnected(MqttClientConnectedEventArgs obj)
         {
+            //Appena si connette fa il sub al topic da cui deve ricevre i messaggi
             _mqttClient.SubscribeAsync(topicToReceive);
 
             Console.WriteLine("Successfully connected.");
         }
 
+        //Connessione Non Avvenuta correttamente su MQTT
         public static void OnConnectingFailed(ManagedProcessFailedEventArgs obj)
         {
             Console.WriteLine("Couldn't connect to broker.");
         }
 
+        //Disconnessione da MQTT
         public static void OnDisconnected(MqttClientDisconnectedEventArgs obj)
         {
             Console.WriteLine("Successfully disconnected.");
         }
 
         #endregion Metodi usati per la connessione con MQTT
+
+        #region Telegram
+
+        //Metodo usare per mandare un messaggio con il bot su telegram
+        private static void sendTelegram(string msgToSend)
+        {
+            //Bot basato su Token di accesso
+            var telegramBot = new TelegramBotClient("5513414500:AAEsclqcHI1dNien8pfrNqY5-PZFzmZ0NI8");
+            //Send del messaggio sul gruppo telegram
+            //Basato sull'id del gruppo
+            telegramBot.SendTextMessageAsync("-592882855", msgToSend);
+        }
+
+        #endregion Telegram
     }
 }

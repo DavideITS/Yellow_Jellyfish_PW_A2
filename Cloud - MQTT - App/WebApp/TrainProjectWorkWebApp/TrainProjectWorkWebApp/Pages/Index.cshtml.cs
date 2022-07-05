@@ -12,10 +12,15 @@ namespace TrainProjectWorkWebApp.Pages
 {
     public class IndexModel : PageModel
     {
+
+        #region Dichiarazione Variabili
+
         private readonly ILogger<IndexModel> _logger;
 
         //Lista degli Utenti, usata per controllare Utente e Password e salvarsi il ruolo
         List<Dictionary<string, object>> userList = new List<Dictionary<string, object>>();
+
+        #region Dati Input da Html
 
         //Username inserito dall'utente
         [BindProperty]
@@ -29,6 +34,10 @@ namespace TrainProjectWorkWebApp.Pages
         [BindProperty]
         public string ErrorToSee { get; set; }
 
+        #endregion Dati Input da Html
+
+        #endregion Dichiarazione Variabili
+
         public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
@@ -39,7 +48,13 @@ namespace TrainProjectWorkWebApp.Pages
         {
             //Reset variabile
             ErrorToSee = "";
+
+            #region Controllo HttPContext
+
             //Controllo se ci sono degli elementi di input
+            //Usato in caso di logout, quindi rimuove i dati dalla Sessione
+            #region Logout
+
             if (this.HttpContext.Request.QueryString.HasValue)
             {
                 //Estrazione contenuto input
@@ -53,6 +68,12 @@ namespace TrainProjectWorkWebApp.Pages
                     return Page();
                 }
             }
+
+            #endregion Logout
+
+            //Controllo se l'utente ha già effettuato l'accesso ed ha ancora salvato il ruolo nella sessione
+            #region Role
+
             //Get della stringa riguardante il ruolo salvata nella sessione
             var roleFromSession = HttpContext.Session.GetString("role");
             //Se non trova la stringa nella sessione, il valore è null
@@ -84,10 +105,16 @@ namespace TrainProjectWorkWebApp.Pages
                     }
                 }
             }
+
+            #endregion Role
+
+            #endregion Controllo HttPContext
+
             //Sennò mostra la pagin di Login
             return Page();
         }
 
+        //Metodo Post
         public IActionResult OnPost()
         {
             try
@@ -102,6 +129,8 @@ namespace TrainProjectWorkWebApp.Pages
                        .ToList();
 
                 #endregion MongoDb User List
+
+                #region Check Login
 
                 //Se ci sono elementi nella lista degli utenti
                 if (userList.Count > 0)
@@ -182,12 +211,15 @@ namespace TrainProjectWorkWebApp.Pages
                     ErrorToSee = "Error connecting with MongoDb";
                     return Page();
                 }
+
+                #endregion Check Login
+
                 //Sennò mostra la pagin di Login
                 return Page();
             }
             catch (Exception err)
             {
-                ErrorToSee = "Error with MongoDb Connection";
+                ErrorToSee = "Error with MongoDb Connection" ;
                 return Page();
             }
         }

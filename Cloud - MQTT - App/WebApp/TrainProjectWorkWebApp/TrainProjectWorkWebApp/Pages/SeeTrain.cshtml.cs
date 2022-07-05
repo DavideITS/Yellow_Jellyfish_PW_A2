@@ -7,6 +7,9 @@ namespace TrainProjectWorkWebApp.Pages
 {
     public class SeeTrainModel : PageModel
     {
+
+        #region Dichiarazione Variabili
+
         //Lista dei Treni, usata per trovare il numero di vagoni di ogni treno
         [BindProperty]
         public List<Dictionary<string, object>> trainList { get; set; }
@@ -14,6 +17,8 @@ namespace TrainProjectWorkWebApp.Pages
         //Errori da mostrare sulla pagina
         [BindProperty]
         public string ErrorToSee { get; set; }
+
+        #endregion Dichiarazione Variabili
 
         public void OnGet()
         {

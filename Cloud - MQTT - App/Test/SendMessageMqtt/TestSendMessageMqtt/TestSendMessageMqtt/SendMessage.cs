@@ -98,7 +98,7 @@ namespace TestSendMessageMqtt
                     {
                         //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Port2\",\"newValue\":false}";
 
-                        json = "{\"nrWagon\":2,\"Temp\":23.1,\"Hum\":55.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,true,false]}";
+                        json = "{\"nrWagon\":2,\"Temp\":23.1,\"Hum\":90.0,\"Smoke\":false,\"Toilette\":true,\"Port\":[false,false,true,false]}";
                         countSendMessage++;
                     }
                     else if (countSendMessage == 2)
@@ -119,7 +119,7 @@ namespace TestSendMessageMqtt
                     {
                         //json = "{\"nrTrain\":1,\"nrWagon\":1,\"change\":\"Temp\",\"newValue\":23}";
 
-                        json = "{\"nrWagon\":5,\"Temp\":23.2,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
+                        json = "{\"nrWagon\":5,\"Temp\":32.0,\"Hum\":64.5,\"Smoke\":false,\"Toilette\":false,\"Port\":[true,true,true,true]}";
                         countSendMessage = 0;
                     }
 
