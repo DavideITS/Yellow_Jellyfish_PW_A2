@@ -15,7 +15,7 @@
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
-#define DATASIZE 3
+#define DATASIZE 4
 // Register settings
 
 struct {
@@ -43,6 +43,7 @@ void adc_init(void);
 void uart_init(int);
 void send_byte(char);
 char send_array(char *);
+void rc_interrupt();
 
 // Timer functions
 void timer_init(void);
@@ -64,14 +65,9 @@ void main(void) {
 
 void __interrupt() ISR()
 {
-
-    if (PIR1bits.RCIF)      // Interrupt RX
-    {
-        valReg1.isRecieving = 1;
-        recievedByte = RCREG;
-        PIR1bits.RCIF = 0;
-    }
     
+    rc_interrupt();
+
     if (INTCONbits.TMR0IF)     // Interrupt timer
     {
         valReg1.msTrig = 1;
@@ -100,37 +96,29 @@ void com_handler()
 
     if((!currentState && prevState) || valReg1.pendingSend)
     {
-        if(valReg1.isRecieving)
-        {
-            valReg1.pendingSend = TRUE;
-        }
-        else
-        {
-            dataArray[0] = recievedByte;
-            dataArray[1] = lastSentByte;
-            dataArray[2] = ADRESL;
-            valReg1.pendingSend = send_array(dataArray);
-        }
-    }
- 
-
-    if(valReg1.isRecieving && !(recievedByte == lastSentByte))
+        dataArray[0] = picId;
+        dataArray[1] = ADRESL;
+        dataArray[2] = recievedByte;
+        dataArray[3] = lastSentByte;
+        valReg1.pendingSend = send_array(dataArray);
+    } 
+    
+    if(valReg1.isRecieving)
     {
-        //PORTD = recievedByte;
-        //PORTB = lastSentByte;
+        PORTD = recievedByte;
+        PORTB = lastSentByte;
         static char recievedArray[4];
         static char pos;
         if(recievedByte == picId)
         {
-            PORTD = recievedByte;
+            //PORTD = recievedByte;
         }
         else
         {
-            PORTB = 0x23;
+            //PORTB = 0x23;
         }
-        
-        
     }
+ 
     valReg1.isRecieving = FALSE;
     prevState = seconds % UPD_DELAY;
     
@@ -154,13 +142,13 @@ void uart_init(int baudrate)
     TRISCbits.TRISC7 = 1;   // Set RC7 to input (RC)
     TRISCbits.TRISC6 = 0;   // Set RC6 to output (TX)
 
-    RCSTAbits.SPEN = 1;     // Enable serial port
-    RCSTAbits.CREN = 1;     // Enable continuous receive mode
-
+    RCSTAbits.CREN = 1; 
     TXSTAbits.TXEN = 1;     // Enable transmission
     TXSTAbits.BRGH = 1;     //Enable Hight speed
 
     SPBRG = (_XTAL_FREQ/(long)(16UL*baudrate))-1;
+    RCSTAbits.SPEN = 1;     // Enable serial port
+    
 }
 
 void send_byte(char byte)
@@ -176,19 +164,26 @@ void send_byte(char byte)
 char send_array(char * array)
 {
     static char pos = 0;
-    if(PIR1bits.TXIF)
+    
+    if(PIR1bits.TXIF && (pos == 0 || recievedByte == lastSentByte))
     {
-        send_byte(array[pos]);
-        if(pos < DATASIZE - 1)
-            pos++;
-        else
-        {
+        if(pos >= DATASIZE)
             pos = 0;
-            return FALSE;
-        }
+            return TRUE;
 
-        return TRUE;
-    }   
+        send_byte(array[pos++]);
+        return FALSE;
+    }
+}
+
+void rc_interrupt()
+{
+    if (PIR1bits.RCIF)      // Interrupt RX
+    {
+        valReg1.isRecieving = !valReg1.pendingSend;
+        recievedByte = RCREG;
+        PIR1bits.RCIF = 0;
+    }
 }
 
 /*
