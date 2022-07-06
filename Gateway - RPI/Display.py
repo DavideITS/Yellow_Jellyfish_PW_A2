@@ -105,53 +105,63 @@ class Home(Frame):
         
         
         self.vagone1 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone1.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone1.png"))
+                Image.open("..//Img//vagone1.png")
             )
         insertbutton(self.pgmarea,self.vagone1,"#212121",100,100,110,20,self.detailsV1)
         
         self.vagone2 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone2.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone2.png"))
+                Image.open("..//Img//vagone2.png")
             )
         insertbutton(self.pgmarea,self.vagone2,"#212121",100,100,230,20,self.detailsV2)
         
         self.vagone3 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone3.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone3.png"))
+                Image.open("..//Img//vagone3.png")
             )
         insertbutton(self.pgmarea,self.vagone3,"#212121",100,100,350,20,self.detailsV3)
         
         self.vagone4 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone4.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone4.png"))
+                Image.open("..//Img//vagone4.png")
             )
         insertbutton(self.pgmarea,self.vagone4,"#212121",100,100,470,20,self.detailsV4)
         
         self.vagone5 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone5.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone5.png"))
+                Image.open("..//Img//vagone5.png")
             )
         insertbutton(self.pgmarea,self.vagone5,"#212121",100,100,590,20,self.detailsV5)
         
         #pulsanti riga 2
         self.vagone6 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone6.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone6.png"))
+                Image.open("..//Img//vagone6.png")
             )
         insertbutton(self.pgmarea,self.vagone6,"#212121",100,100,110,150,self.detailsV6)
         
         self.vagone7 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone7.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone7.png"))
+                Image.open("..//Img//vagone7.png")
             )
         insertbutton(self.pgmarea,self.vagone7,"#212121",100,100,230,150,self.detailsV7)
         
         self.vagone8 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone8.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone8.png"))
+                Image.open("..//Img//vagone8.png")
             )
         insertbutton(self.pgmarea,self.vagone8,"#212121",100,100,350,150,self.detailsV8)
         
         self.vagone9 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone9.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone9.png"))
+                Image.open("..//Img//vagone9.png")
             )
         insertbutton(self.pgmarea,self.vagone9,"#212121",100,100,470,150,self.detailsV9)
         
         self.vagone10 = ImageTk.PhotoImage(
-                Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone10.png"))
+                #Image.open(join(getcwd(),"Gateway - RPI","content","icon","vagone10.png"))
+                Image.open("..//Img//vagone10.png")
             )
         insertbutton(self.pgmarea,self.vagone10,"#212121",100,100,590,150,self.detailsV10)
 
@@ -238,7 +248,8 @@ class Details(Frame):
         self.pgmtitle.place(x=(S_WIDTH - (20*12))/2, y=10)
         
         self.backimg = ImageTk.PhotoImage(
-            Image.open(join(getcwd(),"Gateway - RPI","content","icon","backbtn.png"))
+            #Image.open(join(getcwd(),"Gateway - RPI","content","icon","backbtn.png"))
+            Image.open("..//Img//backbtn.png")
         )
         insertbutton(self.upperbar,self.backimg,"#2D3A71",70,70,0,0,self.goback)       
         
@@ -301,7 +312,8 @@ class Details(Frame):
         Home(self.root)
     
     def refresh(self):
-        DataRT:dict = loadconfigFile(join(getcwd(),"Gateway - RPI","content","RealTime","data.json"))
+        #DataRT:dict = loadconfigFile(join(getcwd(),"Gateway - RPI","content","RealTime","data.json"))
+        DataRT:dict = loadconfigFile("content//RealTime//data.json")
         sDataPort = ["Close","Close","Close","Close","Busy"]
         if not DataRT["vagone"][self.phasecode]["Port1"]:
             sDataPort[0] = "Aperta"
