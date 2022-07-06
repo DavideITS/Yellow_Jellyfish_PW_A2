@@ -138,6 +138,11 @@ namespace ConsoleMqttMongoDb
                                             //Se la temperatura supera i 30°C viene mandata una notifica su telegram
                                             string messageTelegramBot = $"Excessive temperature of {resultFloatConvert} °C  was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
                                             sendTelegram(messageTelegramBot);
+                                        }else if (jsonElement.Key.ToString().ToLower().Equals("temp") && resultFloatConvert < 15)
+                                        {
+                                            //Se la temperatura supera i 30°C viene mandata una notifica su telegram
+                                            string messageTelegramBot = $"Too low temperature of {resultFloatConvert} °C  was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
+                                            sendTelegram(messageTelegramBot);
                                         }
 
                                         //Controllo valore Umidità
@@ -145,6 +150,11 @@ namespace ConsoleMqttMongoDb
                                         {
                                             //Se l'umidità supera l' 80% viene mandata una notifica su telegram
                                             string messageTelegramBot = $"Excessive humidity of {resultFloatConvert}% was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
+                                            sendTelegram(messageTelegramBot);
+                                        }else if (jsonElement.Key.ToString().ToLower().Equals("hum") && resultFloatConvert < 40)
+                                        {
+                                            //Se l'umidità supera l' 80% viene mandata una notifica su telegram
+                                            string messageTelegramBot = $"Too low humidity of {resultFloatConvert}% was detected in wagon {json["nrWagon"]} of train nr° {int.Parse(topicSplit[1].ToString())}";
                                             sendTelegram(messageTelegramBot);
                                         }
                                     }
