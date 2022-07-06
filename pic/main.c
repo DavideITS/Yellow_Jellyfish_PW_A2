@@ -11,53 +11,52 @@
 #include <stdlib.h>
 #define _XTAL_FREQ 8000000
 
-#define UPD_DELAY 5
+#define UPD_DELAY 3
 #define TRUE 1
 #define FALSE 0
 #define BAUDRATE 9600
-#define DATASIZE 4
+#define TXDATASIZE 8
+#define RCDATASIZE 4
 // Register settings
 
 struct {
-	unsigned int msTrig : 2;
-    unsigned int pendingSend : 2;
-    unsigned int isRecieving : 2;
+	unsigned int msTrig : 1;
+    unsigned int pendingSend : 1;
+    unsigned int isReceiving : 1;
 } valReg1;
 
 char picId = 23;
-int placeHolder = 0x3E8;
 
 int millis = 0;
 int seconds = 0;
 
-char dataArray[DATASIZE] = {0};
-char lastSentByte;
-char recievedByte;
+char dataArray[TXDATASIZE] = {0};
+char receivedArray[RCDATASIZE] = {0};
+char receivedByte;
 
 void system_init(void);
 void com_handler(void);
-char id_request(void);
-void adc_init(void);
 
 // Serial communication functions
 void uart_init(int);
 void send_byte(char);
 char send_array(char *);
-void rc_interrupt();
+void rc_interrupt(void);
 
 // Timer functions
 void timer_init(void);
 void timer_handler(void);
+void timer_interrupt(void);
 
 // ADC functions
 void adc_init(void);
-int read_analog(void);
+unsigned int read_analog(char);
 
 void main(void) {
     system_init();
+    PORTDbits.RD2 = 2 >> 1;
     while(1)
     {
-        placeHolder = read_analog();
         timer_handler();
         com_handler();
     }
@@ -65,14 +64,8 @@ void main(void) {
 
 void __interrupt() ISR()
 {
-    
     rc_interrupt();
-
-    if (INTCONbits.TMR0IF)     // Interrupt timer
-    {
-        valReg1.msTrig = 1;
-        INTCONbits.TMR0IF = 0;
-    }
+    timer_interrupt();
 }
 
 void system_init()
@@ -93,41 +86,41 @@ void com_handler()
     static char prevState = 0;
 
     currentState = seconds % UPD_DELAY;
-
+    static unsigned int analogVals[3];
+    static char pos = 0;
+    analogVals[pos] = read_analog(pos);
     if((!currentState && prevState) || valReg1.pendingSend)
     {
         dataArray[0] = picId;
-        dataArray[1] = ADRESL;
-        dataArray[2] = recievedByte;
-        dataArray[3] = lastSentByte;
+        dataArray[1] = (char) (p0 >> 8);
+        dataArray[2] = (char) p0;
+        dataArray[3] = (char)(p1 << 8);
+        dataArray[4] = (char) p1;
+        dataArray[5] = (char)(temp >> 8);
+        dataArray[6] = (char) temp;
         valReg1.pendingSend = send_array(dataArray);
     } 
     
-    if(valReg1.isRecieving)
+    if(valReg1.isReceiving)
     {
-        PORTD = recievedByte;
-        PORTB = lastSentByte;
-        static char recievedArray[4];
-        static char pos;
-        if(recievedByte == picId)
+        static char pos = 0;
+        PORTD = pos;
+        if(pos < RCDATASIZE)
         {
-            //PORTD = recievedByte;
+            receivedArray[pos++] = receivedByte;
         }
         else
         {
-            //PORTB = 0x23;
+            pos = 0;
         }
+        
+        
+        
     }
- 
-    valReg1.isRecieving = FALSE;
-    prevState = seconds % UPD_DELAY;
+    valReg1.isReceiving = FALSE;
+    prevState = currentState;
     
 
-}
-
-char id_request()
-{
-    
 }
 
 /*
@@ -146,9 +139,8 @@ void uart_init(int baudrate)
     TXSTAbits.TXEN = 1;     // Enable transmission
     TXSTAbits.BRGH = 1;     //Enable Hight speed
 
-    SPBRG = (_XTAL_FREQ/(long)(16UL*baudrate))-1;
+    SPBRG = (_XTAL_FREQ/(unsigned long)(16UL*(unsigned long)baudrate))-1;
     RCSTAbits.SPEN = 1;     // Enable serial port
-    
 }
 
 void send_byte(char byte)
@@ -156,7 +148,6 @@ void send_byte(char byte)
     if(PIR1bits.TXIF)
     {
         TXREG = byte;     
-        lastSentByte = byte;
     }
 
 }
@@ -164,24 +155,26 @@ void send_byte(char byte)
 char send_array(char * array)
 {
     static char pos = 0;
-    
-    if(PIR1bits.TXIF && (pos == 0 || recievedByte == lastSentByte))
+    if(PIR1bits.TXIF)
     {
-        if(pos >= DATASIZE)
+        send_byte(array[pos]);
+        if(pos < TXDATASIZE - 1)
+            pos++;
+        else
+        {
             pos = 0;
-            return TRUE;
-
-        send_byte(array[pos++]);
-        return FALSE;
-    }
+            return FALSE;
+        }
+        return TRUE;
+    }   
 }
 
 void rc_interrupt()
 {
     if (PIR1bits.RCIF)      // Interrupt RX
     {
-        valReg1.isRecieving = !valReg1.pendingSend;
-        recievedByte = RCREG;
+        valReg1.isReceiving = !valReg1.pendingSend;
+        receivedByte = RCREG;
         PIR1bits.RCIF = 0;
     }
 }
@@ -190,7 +183,7 @@ void rc_interrupt()
  * Timer functions
  */
 
-void timer_init()
+void timer_init(void)
 {
     // Timer is configured to produce an interrupt ever 1ms at 8Mhz
      
@@ -200,7 +193,7 @@ void timer_init()
     TMR0 = 6;                   // Preload
 }
 
-void timer_handler()
+void timer_handler(void)
 {
     if(valReg1.msTrig)
     {
@@ -214,6 +207,15 @@ void timer_handler()
     }
 }
 
+void timer_interrupt(void)
+{
+    if (INTCONbits.TMR0IF)     // Interrupt timer
+    {
+        valReg1.msTrig = 1;
+        INTCONbits.TMR0IF = 0;
+    }
+}
+
 /*
  * ADC Functions
  */
@@ -221,21 +223,20 @@ void timer_handler()
 void adc_init()
 {
     TRISAbits.TRISA0 = 1;
-    ADCON1 = 0x0E; // Set RA0 as analogic input
+    TRISAbits.TRISA2 = 1;
+    ADCON1 = 0x02; // Set RA0 as analogic input
     ADCON1bits.ADFM = 1; // Right justified
     ADCON0bits.ADON = 1;    // Enable ADC converter
     ADCON0bits.ADCS0 = 0;
     ADCON0bits.ADCS1 = 1;   // 1:32 frequency conversion
-    
-    ADCON0bits.CHS0 = 0;
-    ADCON0bits.CHS1 = 0;
-    ADCON0bits.CHS2 = 0; // Select AN0 (RA0)
 }
 
-int read_analog()
+unsigned int read_analog(char port)
 {
-    static int val = 0;
-
+    static unsigned int val = 0;
+    ADCON0bits.CHS0 = port;
+    ADCON0bits.CHS1 = port >> 1;
+    ADCON0bits.CHS2 = port >> 2;
     if(!ADCON0bits.GO_DONE)
     {
         ADCON0bits.GO_DONE = 1;
