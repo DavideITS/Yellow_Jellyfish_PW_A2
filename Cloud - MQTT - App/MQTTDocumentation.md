@@ -82,7 +82,7 @@ Example for a change of temperature
                         "nrTrain" :1,
                         "nrWagon" :1,
                         "change" :"Temp",
-                        "newValue" :20.3
+                        "newValue" :23
                 }
 
 Example for a change of port status(close to open or vice versa)
