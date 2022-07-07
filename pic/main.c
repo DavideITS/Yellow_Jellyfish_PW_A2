@@ -51,10 +51,10 @@ void timer_interrupt(void);
 // ADC functions
 void adc_init(void);
 unsigned int read_analog(char);
+void read_analog_array(unsigned int *, char *);
 
 void main(void) {
     system_init();
-    PORTDbits.RD2 = 2 >> 1;
     while(1)
     {
         timer_handler();
@@ -70,9 +70,7 @@ void __interrupt() ISR()
 
 void system_init()
 {
-    TRISB = 0x00;
-    TRISD = 0x00;
-    PORTD = 0x00;
+    TRISC = 0x1F;           // RC0:5 are door switches
     INTCONbits.GIE = 1;     // Enable global interrupt
     INTCONbits.PEIE = 1;    // Enable peripheral interrupt 
     uart_init(9600);
@@ -87,24 +85,26 @@ void com_handler()
 
     currentState = seconds % UPD_DELAY;
     static unsigned int analogVals[3];
-    static char pos = 0;
-    analogVals[pos] = read_analog(pos);
+    char ports[4] = {0, 1, 2, '\0'};
+    read_analog_array(analogVals, ports);
+    char doorsStatus = PORTC;
+    doorsStatus &= ~0xE0;
     if((!currentState && prevState) || valReg1.pendingSend)
     {
         dataArray[0] = picId;
-        dataArray[1] = (char) (p0 >> 8);
-        dataArray[2] = (char) p0;
-        dataArray[3] = (char)(p1 << 8);
-        dataArray[4] = (char) p1;
-        dataArray[5] = (char)(temp >> 8);
-        dataArray[6] = (char) temp;
+        dataArray[1] = (char) (analogVals[0] >> 8);
+        dataArray[2] = (char) analogVals[0];
+        dataArray[3] = (char)(analogVals[1] >> 8);
+        dataArray[4] = (char) analogVals[1];
+        dataArray[5] = (char)(analogVals[2] >> 8);
+        dataArray[6] = (char) analogVals[2];
+        dataArray[7] = doorsStatus;
         valReg1.pendingSend = send_array(dataArray);
     } 
     
     if(valReg1.isReceiving)
     {
         static char pos = 0;
-        PORTD = pos;
         if(pos < RCDATASIZE)
         {
             receivedArray[pos++] = receivedByte;
@@ -244,6 +244,24 @@ unsigned int read_analog(char port)
     }
 
     return val;
+}
+
+void read_analog_array(unsigned int * array, char * ports)
+{
+    static char pos = 0;
+    static char prevState = 0;
+    
+    char state = millis % 100;
+    if(!state && prevState)
+        pos++;
+    
+    if(ports[pos] == '\0')
+        pos = 0;
+        
+    array[pos] = read_analog(ports[pos]);
+    
+    prevState = state;
+    
 }
 
 /*
