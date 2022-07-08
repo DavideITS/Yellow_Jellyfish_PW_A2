@@ -25,7 +25,7 @@ struct {
     unsigned int isReceiving : 1;
 } valReg1;
 
-char picId = 23;
+char picId = 1;
 
 int millis = 0;
 int seconds = 0;
@@ -51,7 +51,7 @@ void timer_interrupt(void);
 // ADC functions
 void adc_init(void);
 unsigned int read_analog(char);
-void read_analog_array(unsigned int *, char *);
+void read_analog_ports(unsigned int *, char *);
 
 void main(void) {
     system_init();
@@ -70,6 +70,8 @@ void __interrupt() ISR()
 
 void system_init()
 {
+    TRISD = 0x00;
+    TRISB = 0x00;
     TRISC = 0x1F;           // RC0:5 are door switches
     INTCONbits.GIE = 1;     // Enable global interrupt
     INTCONbits.PEIE = 1;    // Enable peripheral interrupt 
@@ -85,8 +87,8 @@ void com_handler()
 
     currentState = seconds % UPD_DELAY;
     static unsigned int analogVals[3];
-    char ports[4] = {0, 1, 2, '\0'};
-    read_analog_array(analogVals, ports);
+    char analogPorts[4] = {0, 1, 2, '\0'};
+    read_analog_ports(analogVals, analogPorts);
     char doorsStatus = PORTC;
     doorsStatus &= ~0xE0;
     if((!currentState && prevState) || valReg1.pendingSend)
@@ -107,14 +109,24 @@ void com_handler()
         static char pos = 0;
         if(pos < RCDATASIZE)
         {
-            receivedArray[pos++] = receivedByte;
+            receivedArray[pos] = receivedByte;
+        }
+
+        PORTB = pos;
+        if(pos == 3)
+        {
+            if(receivedArray[0] == picId)
+            {
+                PORTD = receivedArray[3];
+            }
+            pos = 0;
         }
         else
         {
-            pos = 0;
+            pos++;
         }
         
-        
+
         
     }
     valReg1.isReceiving = FALSE;
@@ -135,7 +147,7 @@ void uart_init(int baudrate)
     TRISCbits.TRISC7 = 1;   // Set RC7 to input (RC)
     TRISCbits.TRISC6 = 0;   // Set RC6 to output (TX)
 
-    RCSTAbits.CREN = 1; 
+    RCSTAbits.CREN = 1;
     TXSTAbits.TXEN = 1;     // Enable transmission
     TXSTAbits.BRGH = 1;     //Enable Hight speed
 
@@ -224,7 +236,7 @@ void adc_init()
 {
     TRISAbits.TRISA0 = 1;
     TRISAbits.TRISA2 = 1;
-    ADCON1 = 0x02; // Set RA0 as analogic input
+    ADCON1 = 0x02; // Set RA0:4 as analogic input
     ADCON1bits.ADFM = 1; // Right justified
     ADCON0bits.ADON = 1;    // Enable ADC converter
     ADCON0bits.ADCS0 = 0;
@@ -246,7 +258,7 @@ unsigned int read_analog(char port)
     return val;
 }
 
-void read_analog_array(unsigned int * array, char * ports)
+void read_analog_ports(unsigned int * array, char * ports)
 {
     static char pos = 0;
     static char prevState = 0;
@@ -267,8 +279,3 @@ void read_analog_array(unsigned int * array, char * ports)
 /*
  * LCD functions
  */
-
-void lcd_init()
-{
-    
-}
