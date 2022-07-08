@@ -2,8 +2,8 @@
 	"vagone": [
 		{
             "nrWagon": 1,
-            "Temp": 52.3,
-            "Hum": 239,
+            "Temp": 25.3,
+            "Hum": 89,
             "Smoke": true,
             "Port1": true,
             "Port2": false,
@@ -13,8 +13,8 @@
         },
 		{
             "nrWagon": 2,
-            "Temp": 52.3,
-            "Hum": 239,
+            "Temp": 26.4,
+            "Hum": 90,
             "Smoke": true,
             "Port1": true,
             "Port2": false,
@@ -24,8 +24,8 @@
         },
 		{
             "nrWagon": 3,
-            "Temp": 52.3,
-            "Hum": 239,
+            "Temp": 25.7,
+            "Hum": 87,
             "Smoke": true,
             "Port1": true,
             "Port2": false,
@@ -35,8 +35,8 @@
         },
 		{
             "nrWagon": 4,
-            "Temp": 52.3,
-            "Hum": 239,
+            "Temp": 24.9,
+            "Hum": 89,
             "Smoke": true,
             "Port1": true,
             "Port2": false,
