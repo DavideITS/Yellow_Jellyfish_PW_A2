@@ -11,7 +11,7 @@ namespace ConsoleMqttMongoDb
     public class MongoDb
     {
         //public static MongoClient Client = new MongoClient("mongodb://127.0.0.1:27017");      //test in locale
-        public static MongoClient Client = new MongoClient("mongodb+srv://simonezoppelletto:test000@simulazioneesame.2eprc.mongodb.net/test?readPreference=primary");
+        public static MongoClient Client = new MongoClient(System.IO.File.ReadAllText("..//..//..//MongoDbConnectionString.txt"));
 
         public static bool IsConnected()
         {

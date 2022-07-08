@@ -6,6 +6,7 @@ using MQTTnet.Extensions.ManagedClient;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using Telegram.Bot;
 
@@ -187,9 +188,19 @@ namespace ConsoleMqttMongoDb
 
                         #endregion Aggiunta dati in objToInsert
 
-                        //Dict finito, ora lo devo inserire nel db
-                        MongoDb.Client.GetDatabase("trainProjectWork").GetCollection<Dictionary<string, object>>("TrainLiveData").InsertOne(objToInsert);
+                        try
+                        {
 
+                            //var a = Directory.GetFiles(Path.GetFullPath("..//..//..//"));
+
+                            //Dict finito, ora lo devo inserire nel db
+                            MongoDb.Client.GetDatabase("trainProjectWork").GetCollection<Dictionary<string, object>>("TrainLiveData").InsertOne(objToInsert);
+
+                        }
+                        catch (Exception err)
+                        {
+                            var errorMessage = err.Message;
+                        }
                     }
                     catch (Exception err)
                     {
