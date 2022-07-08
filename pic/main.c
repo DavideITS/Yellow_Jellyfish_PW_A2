@@ -1,274 +1,310 @@
+/*
+ * File:   main_LCD_V2.c
+ * Author: Marion Francesco
+ *
+ * Created on 5 novembre 2021, 10.55
+ */
 #pragma config FOSC = HS        // Oscillator Selection bits (HS oscillator)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
-#pragma config PWRTE = ON      // Power-up Timer Enable bit (PWRT enabled)
+#pragma config PWRTE = ON       // Power-up Timer Enable bit (PWRT enabled)
 #pragma config BOREN = ON       // Brown-out Reset Enable bit (BOR enabled)
 #pragma config LVP = ON         // Low-Voltage (Single-Supply) In-Circuit Serial Programming Enable bit (RB3/PGM pin has PGM function; low-voltage programming enabled)
 #pragma config CPD = OFF        // Data EEPROM Memory Code Protection bit (Data EEPROM code protection off)
 #pragma config WRT = OFF        // Flash Program Memory Write Enable bits (Write protection off; all program memory may be written to by EECON control)
 #pragma config CP = OFF         // Flash Program Memory Code Protection bit (Code protection off)
 
-#include <xc.h>
-#include <stdlib.h>
 #define _XTAL_FREQ 8000000
 
-#define UPD_DELAY 3
-#define TRUE 1
-#define FALSE 0
-#define BAUDRATE 9600
-#define TXDATASIZE 8
-#define RCDATASIZE 4
-// Register settings
+#define L_ON 0x0F
+#define L_OFF 0x08
+#define L_CLR 0x01
 
-struct {
-	unsigned int msTrig : 1;
-    unsigned int pendingSend : 1;
-    unsigned int isReceiving : 1;
-} valReg1;
+#define L_L1_C1 0x80
+#define L_L2_C1 0xC0
 
-char picId = 23;
+#define L_L1_C3 0x82
+#define L_L2_C3 0xC2
 
-int millis = 0;
-int seconds = 0;
+#define L_CR 0x0F
+#define L_NCR 0x0C
+#define L_CFG 0x38
+#define L_CUR 0x0E
 
-char dataArray[TXDATASIZE] = {0};
-char receivedArray[RCDATASIZE] = {0};
-char receivedByte;
 
-void system_init(void);
-void com_handler(void);
 
-// Serial communication functions
-void uart_init(int);
-void send_byte(char);
-char send_array(char *);
-void rc_interrupt(void);
+#include <xc.h>
 
-// Timer functions
-void timer_init(void);
-void timer_handler(void);
-void timer_interrupt(void);
+void send_LCD(char inf, char comando);
+void init_LCD(void);
+void send_string(char *str);
 
-// ADC functions
-void adc_init(void);
-unsigned int read_analog(char);
-void read_analog_array(unsigned int *, char *);
+void scorrimentoMenu(char *,char voci);
+void apriPorte(char posMenu);
+
+
+char currentStateRB0;
+char currentStateRB1;
+char currentStateRB2;
+char currentStateRB3;
+
+char prevStateRB0;
+char prevStateRB1;
+char prevStateRB2;
+char prevStateRB3;
+
+char posMenu;
+
+char voce1[] = "1 temp";
+char voce2[] = "2 um  ";
+char voce3[] = "3 fumo";
+char voce4[] = "4 port";
+char m1[4];
+
+char menuPorte[4];
+
+char porta1[] = "port1";
+char porta2[] = "port2";
+char porta3[] = "port3";
+char porta4[] = "port4";
+char porte[4];
+char portToOpen;
+
+char provaMenu;
+
+char initMenu;
 
 void main(void) {
-    system_init();
+    init_LCD();
+    PORTB = 0;
+    m1[0] = voce1;
+    m1[1] = voce2;
+    m1[2] = voce3;
+    m1[3] = voce4;
+    
+    porte[0] = porta1;
+    porte[1] = porta2;
+    porte[2] = porta3;
+    porte[3] = porta4;
+
+    
+    
     while(1)
     {
-        timer_handler();
-        com_handler();
-    }
-}
-
-void __interrupt() ISR()
-{
-    rc_interrupt();
-    timer_interrupt();
-}
-
-void system_init()
-{
-    TRISC = 0x1F;           // RC0:5 are door switches
-    INTCONbits.GIE = 1;     // Enable global interrupt
-    INTCONbits.PEIE = 1;    // Enable peripheral interrupt 
-    uart_init(9600);
-    timer_init();
-    adc_init();
-}
-
-void com_handler()
-{
-    static char currentState = 0;
-    static char prevState = 0;
-
-    currentState = seconds % UPD_DELAY;
-    static unsigned int analogVals[3];
-    char ports[4] = {0, 1, 2, '\0'};
-    read_analog_array(analogVals, ports);
-    char doorsStatus = PORTC;
-    doorsStatus &= ~0xE0;
-    if((!currentState && prevState) || valReg1.pendingSend)
-    {
-        dataArray[0] = picId;
-        dataArray[1] = (char) (analogVals[0] >> 8);
-        dataArray[2] = (char) analogVals[0];
-        dataArray[3] = (char)(analogVals[1] >> 8);
-        dataArray[4] = (char) analogVals[1];
-        dataArray[5] = (char)(analogVals[2] >> 8);
-        dataArray[6] = (char) analogVals[2];
-        dataArray[7] = doorsStatus;
-        valReg1.pendingSend = send_array(dataArray);
-    } 
-    
-    if(valReg1.isReceiving)
-    {
-        static char pos = 0;
-        if(pos < RCDATASIZE)
+        currentStateRB2 = !PORTBbits.RB2;
+        currentStateRB3 = !PORTBbits.RB3;
+        
+        if (currentStateRB2 && !prevStateRB2 && provaMenu == 0)
         {
-            receivedArray[pos++] = receivedByte;
+            initMenu = 0;
+            provaMenu = 1;
+        }
+        else if(currentStateRB2 && !prevStateRB2 && provaMenu == 1)
+        {
+            initMenu = 0;
+            provaMenu = 0;
+        }
+        
+        if (provaMenu == 1 )
+        {
+            scorrimentoMenu(porte, 4);
+            if (currentStateRB3 && !prevStateRB3)
+            {
+                apriPorte(posMenu);
+            }
+            
         }
         else
         {
-            pos = 0;
+            scorrimentoMenu(m1, 4);
+            /*if (posMenu == 1)
+            {
+                send_LCD(0, 0x8A);
+                send_string("18 C");
+                send_LCD(0, 0xCA);
+                send_string("18 %");
+            }*/
+            
         }
         
-        
-        
+        prevStateRB2 = currentStateRB2;
+        prevStateRB3 = currentStateRB3;
     }
-    valReg1.isReceiving = FALSE;
-    prevState = currentState;
-    
-
+    return;
 }
 
-/*
- * Serial communication functions
- */
-
-void uart_init(int baudrate)
+void scorrimentoMenu(char *m, char voci)
 {
-    // Interrupt configuration
-    PIE1bits.RCIE = 1;      // Enable RC interrupt
+    currentStateRB0 = !PORTBbits.RB0;   
+    currentStateRB1 = !PORTBbits.RB1;
     
-    TRISCbits.TRISC7 = 1;   // Set RC7 to input (RC)
-    TRISCbits.TRISC6 = 0;   // Set RC6 to output (TX)
-
-    RCSTAbits.CREN = 1; 
-    TXSTAbits.TXEN = 1;     // Enable transmission
-    TXSTAbits.BRGH = 1;     //Enable Hight speed
-
-    SPBRG = (_XTAL_FREQ/(unsigned long)(16UL*(unsigned long)baudrate))-1;
-    RCSTAbits.SPEN = 1;     // Enable serial port
-}
-
-void send_byte(char byte)
-{
-    if(PIR1bits.TXIF)
+    if (initMenu == 0)
     {
-        TXREG = byte;     
+        posMenu = 0;
+        send_LCD(0, L_CLR);
+        send_LCD(0, L_L1_C1);
+        send_string(">");
+        send_LCD(0, L_L2_C1);
+        send_string(" ");
+        send_LCD(0, L_L1_C3);
+        send_string(m[0]);
+        send_LCD(0, L_L2_C3);
+        send_string(m[1]);
+        
+        send_LCD(0, 0x8A);
+        send_string("-- C");
+        send_LCD(0, 0xCA);
+        send_string("-- %");
+                    
+        initMenu = 1;
     }
-
-}
-
-char send_array(char * array)
-{
-    static char pos = 0;
-    if(PIR1bits.TXIF)
-    {
-        send_byte(array[pos]);
-        if(pos < TXDATASIZE - 1)
-            pos++;
+    
+    if (currentStateRB1 && !prevStateRB1 && posMenu > 0)
+      {
+        posMenu--;
+        send_LCD(0, L_L1_C1);
+        send_string(">");
+        send_LCD(0, L_L2_C1);
+        send_string(" ");
+        
+        send_LCD(0, L_L1_C3);
+        send_string(m[posMenu]);
+        send_LCD(0, L_L2_C3);
+        send_string(m[posMenu+1]);
+        
+        if (provaMenu == 0)
+        {
+            switch(posMenu)
+            {
+                case 0:
+                    send_LCD(0, 0x8A);
+                    send_string("18 C");
+                    send_LCD(0, 0xCA);
+                    send_string("18 %");
+                    break;
+                case 1:
+                    send_LCD(0, 0x8A);
+                    send_string("18 %");
+                    send_LCD(0, 0xCA);
+                    send_string("on  ");
+                    break;
+                case 2:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+                case 3:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+            }
+        }
+        
+      } 
+    if (currentStateRB0 && !prevStateRB0 && posMenu < voci-1)
+      {
+        posMenu++;
+        
+        send_LCD(0, L_L1_C1);
+        if (posMenu == 0)
+            send_string(">");
         else
-        {
-            pos = 0;
-            return FALSE;
-        }
-        return TRUE;
-    }   
-}
-
-void rc_interrupt()
-{
-    if (PIR1bits.RCIF)      // Interrupt RX
-    {
-        valReg1.isReceiving = !valReg1.pendingSend;
-        receivedByte = RCREG;
-        PIR1bits.RCIF = 0;
-    }
-}
-
-/*
- * Timer functions
- */
-
-void timer_init(void)
-{
-    // Timer is configured to produce an interrupt ever 1ms at 8Mhz
-     
-    INTCONbits.TMR0IE = 1;      // Enable TIMER 0 interrupt
-    OPTION_REGbits.T0CS = 0;    // Select internal clock
-    OPTION_REGbits.PS1 = 1;     // Prescaler to 1:8
-    TMR0 = 6;                   // Preload
-}
-
-void timer_handler(void)
-{
-    if(valReg1.msTrig)
-    {
-        if(++millis >= 1000)
-        {
-            millis = 0;
-            seconds++;
-        }
+            send_string(" ");
         
-        valReg1.msTrig = 0;
-    }
-}
-
-void timer_interrupt(void)
-{
-    if (INTCONbits.TMR0IF)     // Interrupt timer
-    {
-        valReg1.msTrig = 1;
-        INTCONbits.TMR0IF = 0;
-    }
-}
-
-/*
- * ADC Functions
- */
-
-void adc_init()
-{
-    TRISAbits.TRISA0 = 1;
-    TRISAbits.TRISA2 = 1;
-    ADCON1 = 0x02; // Set RA0 as analogic input
-    ADCON1bits.ADFM = 1; // Right justified
-    ADCON0bits.ADON = 1;    // Enable ADC converter
-    ADCON0bits.ADCS0 = 0;
-    ADCON0bits.ADCS1 = 1;   // 1:32 frequency conversion
-}
-
-unsigned int read_analog(char port)
-{
-    static unsigned int val = 0;
-    ADCON0bits.CHS0 = port;
-    ADCON0bits.CHS1 = port >> 1;
-    ADCON0bits.CHS2 = port >> 2;
-    if(!ADCON0bits.GO_DONE)
-    {
-        ADCON0bits.GO_DONE = 1;
-        val = ADRESL + (ADRESH << 8);
-    }
-
-    return val;
-}
-
-void read_analog_array(unsigned int * array, char * ports)
-{
-    static char pos = 0;
-    static char prevState = 0;
-    
-    char state = millis % 100;
-    if(!state && prevState)
-        pos++;
-    
-    if(ports[pos] == '\0')
-        pos = 0;
+        send_LCD(0, L_L2_C1);
+        if (posMenu == 0)
+            send_string(" ");
+        else
+            send_string(">");
         
-    array[pos] = read_analog(ports[pos]);
-    
-    prevState = state;
+        send_LCD(0, L_L1_C3);
+        send_string(m[posMenu-1]);
+        send_LCD(0, L_L2_C3);
+        send_string(m[posMenu]);
+        
+        if (provaMenu == 0)
+        {
+            switch(posMenu)
+            {
+                case 1:
+                    send_LCD(0, 0x8A);
+                    send_string("18 C");
+                    send_LCD(0, 0xCA);
+                    send_string("18 %");
+                    break;
+                case 2:
+                    send_LCD(0, 0x8A);
+                    send_string("18 %");
+                    send_LCD(0, 0xCA);
+                    send_string("on  ");
+                    break;
+                case 3:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+            }
+        }
+            
+      } 
+   
+    prevStateRB0 = currentStateRB0;   
+    prevStateRB1 = currentStateRB1;
     
 }
 
-/*
- * LCD functions
- */
-
-void lcd_init()
+void apriPorte(char portToOpen)
 {
     
+}
+
+
+void init_LCD(void){
+    TRISE = 0;
+    TRISA = 0;
+    TRISD = 0;
+    TRISB = 0;
+    PORTD = 0;
+    TRISBbits.TRISB3 = 1;
+    TRISBbits.TRISB2 = 1;
+    TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB0 = 1;
+    
+    PORTE &= ~0x06;
+    __delay_ms(20);
+    PORTE |= 0x02;
+    send_LCD(0, L_CFG);
+    __delay_ms(5);
+    send_LCD(0, L_CFG);
+    __delay_ms(1);
+    send_LCD(0, L_CFG);
+    send_LCD(0, L_OFF);
+    send_LCD(0, L_ON);
+    send_LCD(0, L_CLR);
+    send_LCD(0, L_CUR);
+    
+    provaMenu = 0;
+    posMenu = 0;
+    initMenu = 0;
+}
+
+void send_LCD(char inf, char comando){
+    PORTE |= 0x02;
+    PORTD = comando;
+    if(!inf){
+        PORTE &= ~0x04;
+    }else{
+        PORTE |= 0x04;
+    }
+    PORTE &= ~0x02;
+    PORTE |= 0x02;
+}
+
+void send_string(char *str){
+    for(unsigned char i=0;str[i]!='\0';i++){
+        send_LCD(1, str[i]);
+    }
 }
