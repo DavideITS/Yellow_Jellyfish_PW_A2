@@ -116,6 +116,14 @@ void main(void) {
         else
         {
             scorrimentoMenu(m1, 4);
+            /*if (posMenu == 1)
+            {
+                send_LCD(0, 0x8A);
+                send_string("18 C");
+                send_LCD(0, 0xCA);
+                send_string("18 %");
+            }*/
+            
         }
         
         prevStateRB2 = currentStateRB2;
@@ -141,6 +149,12 @@ void scorrimentoMenu(char *m, char voci)
         send_string(m[0]);
         send_LCD(0, L_L2_C3);
         send_string(m[1]);
+        
+        send_LCD(0, 0x8A);
+        send_string("-- C");
+        send_LCD(0, 0xCA);
+        send_string("-- %");
+                    
         initMenu = 1;
     }
     
@@ -157,10 +171,42 @@ void scorrimentoMenu(char *m, char voci)
         send_LCD(0, L_L2_C3);
         send_string(m[posMenu+1]);
         
+        if (provaMenu == 0)
+        {
+            switch(posMenu)
+            {
+                case 0:
+                    send_LCD(0, 0x8A);
+                    send_string("18 C");
+                    send_LCD(0, 0xCA);
+                    send_string("18 %");
+                    break;
+                case 1:
+                    send_LCD(0, 0x8A);
+                    send_string("18 %");
+                    send_LCD(0, 0xCA);
+                    send_string("on  ");
+                    break;
+                case 2:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+                case 3:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+            }
+        }
+        
       } 
     if (currentStateRB0 && !prevStateRB0 && posMenu < voci-1)
       {
         posMenu++;
+        
         send_LCD(0, L_L1_C1);
         if (posMenu == 0)
             send_string(">");
@@ -177,6 +223,32 @@ void scorrimentoMenu(char *m, char voci)
         send_string(m[posMenu-1]);
         send_LCD(0, L_L2_C3);
         send_string(m[posMenu]);
+        
+        if (provaMenu == 0)
+        {
+            switch(posMenu)
+            {
+                case 1:
+                    send_LCD(0, 0x8A);
+                    send_string("18 C");
+                    send_LCD(0, 0xCA);
+                    send_string("18 %");
+                    break;
+                case 2:
+                    send_LCD(0, 0x8A);
+                    send_string("18 %");
+                    send_LCD(0, 0xCA);
+                    send_string("on  ");
+                    break;
+                case 3:
+                    send_LCD(0, 0x8A);
+                    send_string("on  ");
+                    send_LCD(0, 0xCA);
+                    send_string("    ");
+                    break;
+            }
+        }
+            
       } 
    
     prevStateRB0 = currentStateRB0;   
