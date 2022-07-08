@@ -8,7 +8,7 @@ In the first table is shown the byte array that the pic send to the Gateway
 |     0    |      1      | 2 |     3    | 4 |       5      | 6 | 7 |
 |:--------:|:-----------:|:-:|:--------:|:-:|:------------:|:-:|:-:|
 | Wagon ID | Temperature |   | Humidity |   | Smoke Sensor |   | * |
-|          |     |       |   |          |                  |   |   |
+|          |             |   |          |                  |   |   |
 
 
 In thisseond table is shown the organization of the 8th byte of the previous array with his specifics
@@ -22,8 +22,9 @@ In thisseond table is shown the organization of the 8th byte of the previous arr
 
 ## Menu button pin-out
 
+This is a little guide to use the button in the correct way
 
-|        RB0       |       RB1      |         RB2         |      RB3      |
-|:----------------:|:--------------:|:-------------------:|:-------------:|
-| Scroll down Menu | Scroll up Menu | Enter/Exit Sub-Menu | Select Option |
-|                  |                |                     |               |
+|        RB0       |       RB1      |      RB3      |
+|:----------------:|:--------------:|:-------------:|
+| Scroll down Menu | Scroll up Menu | Select Option |
+|                  |                |               |
