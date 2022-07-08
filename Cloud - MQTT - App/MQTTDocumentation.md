@@ -72,6 +72,8 @@ The third level of the Topic set the mode that is in use:
                         "Port4" :false,
                 }
 
+When this message is received it is saved on the MongoDB database, it is also a check of the variable if there is some incongruention with the accepted value an error message is sent to the Telegram Group
+
 -- --
 
 ## JSON-Command Message Example
