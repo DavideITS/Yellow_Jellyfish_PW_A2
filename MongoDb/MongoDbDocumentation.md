@@ -9,11 +9,11 @@ We have choose to use Mongo DB as database because it is one of the most popular
 
 ## Collection Names:
 
-        Users: Collection in which users are saved.
+Users: Collection in which users are saved.
 
-        Trains: Collection in which trains info are saved.
+Trains: Collection in which trains info are saved.
 
-        TrainLiveData: Collection in which all the data collected through mqtt are saved.
+TrainLiveData: Collection in which all the data collected through mqtt are saved.
         
 
 ## Generic Data store example:

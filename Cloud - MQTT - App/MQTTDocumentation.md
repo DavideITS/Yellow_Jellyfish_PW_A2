@@ -7,7 +7,7 @@ We choose this protocol for its easy implementation and its scalability which is
 
 ## Broker
 
-        The Mqtt broker used is hivemq because it's one of the best free and online broker, the pub/sub logic is written in C#
+The Mqtt broker used is hivemq because it's one of the best free and online broker, the pub/sub logic is written in C#
 
 -- --
 
