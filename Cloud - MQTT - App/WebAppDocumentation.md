@@ -37,3 +37,16 @@ The data are:
 
 ### Change Wagon Temperature Interface
 
+To change temperature click on the temperature's value of the corrispondent wagon, set the desired temperature and submit it.
+
+![](..//Img//webAppChangeTemp.png)
+
+### Change Wagon Port Status Interface
+
+To change the doors status click on the locket of the corrispondent port of the corrispondent wagon, set the desired status and submit it.
+
+![](..//Img//webAppChangePort.png)
+
+### Logout
+
+To logout the user click the logout button to return on the login page
