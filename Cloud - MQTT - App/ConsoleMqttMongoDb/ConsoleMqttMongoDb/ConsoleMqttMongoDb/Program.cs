@@ -20,7 +20,7 @@ namespace ConsoleMqttMongoDb
         //Client Mqtt
         static IManagedMqttClient _mqttClient;
         //Topic nel quale ricevere i messaggi
-        static string topicToReceive = "trainProjectWork/1/liveData/#";
+        static string topicToReceive = "trainProjectWork/+/liveData/#";
         //Tempo in secondi tra ogni tentativo di riconnessione
         static int timeMqttReconnect = 5;
         //Numero Porta di Mqtt
