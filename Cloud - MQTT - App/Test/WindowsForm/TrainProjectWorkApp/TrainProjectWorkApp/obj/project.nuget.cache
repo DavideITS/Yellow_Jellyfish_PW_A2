@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "MXoJVZuqTNEOnzb77YXDgEss8iBUSPjUo+yWcdGENep3vxilnd0Pu00J+6u3vWs6dyPaYsCsu4XxqOhwretmcA==",
+  "dgSpecHash": "NC7Ubb+g6z4NMC7OENYpx5aSFDGL2OYwBZwec39OmWcnUHFaQYar1r38ThyEfUZ9OTdXZZcOsB9PqlEbZe0Bpg==",
   "success": true,
-  "projectFilePath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
+  "projectFilePath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\Test\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\dnsclient\\1.6.0\\dnsclient.1.6.0.nupkg.sha512",
     "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",

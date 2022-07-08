@@ -776,11 +776,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
+      "projectUniqueName": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\Test\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
       "projectName": "TrainProjectWorkApp",
-      "projectPath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
+      "projectPath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\Test\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\TrainProjectWorkApp.csproj",
       "packagesPath": "C:\\Users\\Simone Zoppelletto\\.nuget\\packages\\",
-      "outputPath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\obj\\",
+      "outputPath": "C:\\DIQU\\Anno 2\\Project Work\\Yellow_Jellyfish_PW_A2\\Cloud - MQTT - App\\Test\\WindowsForm\\TrainProjectWorkApp\\TrainProjectWorkApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Simone Zoppelletto\\AppData\\Roaming\\NuGet\\NuGet.Config",

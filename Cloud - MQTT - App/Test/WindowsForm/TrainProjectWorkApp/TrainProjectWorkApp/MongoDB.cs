@@ -8,9 +8,8 @@ namespace TrainProjectWorkApp
 {
     class MongoDB
     {
-        //public static MongoClient Client = new MongoClient("mongodb://127.0.0.1:27017");
-        public static MongoClient Client = new MongoClient("mongodb+srv://simonezoppelletto:test000@simulazioneesame.2eprc.mongodb.net/test?readPreference=primary");
-
+        public static MongoClient Client = new MongoClient("mongodb://127.0.0.1:27017");
+        
         public static bool IsConnected()
         {
             try
