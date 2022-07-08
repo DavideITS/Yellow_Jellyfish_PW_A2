@@ -1,40 +1,48 @@
 {
 	"vagone": [
 		{
-			"nrTrain" : 1,
-            "nrWagon" : 1,
-            "Temp" : 1322,
-            "hum" : 67,
-            "smoke" : 1,
-            "Toilet" : 1,
-            "port" : 1 
-		},
+            "nrWagon": 1,
+            "Temp": 25.3,
+            "Hum": 89,
+            "Smoke": true,
+            "Port1": true,
+            "Port2": false,
+            "Port3": true,
+            "Port4": false,
+            "Toilette": true
+        },
 		{
-			"nrTrain" : 12,
-            "nrWagon" : 2,
-            "Temp" : 132,
-            "hum" : 67,
-            "smoke" : 1,
-            "Toilet" : 1,
-            "port" : 1 
-		},
+            "nrWagon": 2,
+            "Temp": 26.4,
+            "Hum": 90,
+            "Smoke": true,
+            "Port1": true,
+            "Port2": false,
+            "Port3": true,
+            "Port4": false,
+            "Toilette": true
+        },
 		{
-			"nrTrain" : 12,
-            "nrWagon" : 3,
-            "Temp" : 132,
-            "hum" : 67,
-            "smoke" : 1,
-            "Toilet" : 1,
-            "port" : 1 
-		},
+            "nrWagon": 3,
+            "Temp": 25.7,
+            "Hum": 87,
+            "Smoke": true,
+            "Port1": true,
+            "Port2": false,
+            "Port3": true,
+            "Port4": false,
+            "Toilette": true
+        },
 		{
-			"nrTrain" : 12,
-            "nrWagon" : 4,
-            "Temp" : 132,
-            "hum" : 67,
-            "smoke" : 1,
-            "Toilet" : 1,
-            "port" : 1 
-		}
+            "nrWagon": 4,
+            "Temp": 24.9,
+            "Hum": 89,
+            "Smoke": true,
+            "Port1": true,
+            "Port2": false,
+            "Port3": true,
+            "Port4": false,
+            "Toilette": true
+        }
 	]
 }
